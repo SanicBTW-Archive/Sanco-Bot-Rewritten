@@ -4,7 +4,8 @@
   "description": "my dumb bot rewritten",
   "main": "index.js",
   "scripts": {
-    "run": "ts-node"
+    "run": "ts-node index.ts",
+    "register": "ts-node ./src/TokenReg.ts"
   },
   "repository": {
     "type": "git",
