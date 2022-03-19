@@ -1,8 +1,14 @@
 {
-    "amount": 1,
     "options": {
-        "1": {
+        "1": 
+        {
             "optionName": "showDebugLogs",
+            "optionState": true,
+            "optionValue": null
+        },
+        "2":
+        {
+            "optionName": "ignoreLogErrors",
             "optionState": true,
             "optionValue": null
         }

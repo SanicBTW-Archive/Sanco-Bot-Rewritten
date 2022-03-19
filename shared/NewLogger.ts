@@ -1,6 +1,6 @@
 //todo: improve spaghetti aka the switch case lol
 import color from 'colorts';
-import { ReturnFields, ReturnOptionName, ReturnOptionState, ReturnOptionValue} from './Returner';
+import { ReturnFields, ReturnOptionState} from './Returner';
 
 enum LogLevels 
 {
@@ -17,9 +17,9 @@ var ToSave:Array<string> = []; //Used to save the logs in a file when the bot is
 
 let showDebugLogs = ReturnFields("LoggerConfig", 1);
 let showDebugLogsState = ReturnOptionState(showDebugLogs);
-console.table(showDebugLogs);
 
-
+let ignoreLogErrors = ReturnFields("LoggerConfig", 2);
+let ignoreLogErrorsState = ReturnOptionState(ignoreLogErrors);
 
 export function Logger(message:any, key?:LogLevelsStrings)
 {
@@ -44,13 +44,13 @@ export function Logger(message:any, key?:LogLevelsStrings)
         case "WARNING":
             return console.log(styleTable[key]);
         case "ERROR":
-            return console.log(styleTable[key]);
-            //if the setting is enable ignore the throw and just throw a return
-            //throw console.log(styleTable[key]);
+            if(ignoreLogErrorsState) return console.log(styleTable[key] + " - Ignoring error!");
+            else throw console.log(styleTable[key]);
         case "DEBUG":
-            return console.log(styleTable[key]);
-            //if(showDebugLogs) return console.log(styleTable[key]);
-            //else throw Logger("Can't show debug logs if the option is disabled", "ERROR");
+            //fail safe kind of works
+            if(showDebugLogsState == true) return console.log(styleTable[key]);
+            else if (showDebugLogsState == false && ignoreLogErrorsState) Logger("Can't show debug logs if the option is disabled", "ERROR");
+            else throw Logger("Can't show debug logs if the option is disabled", "ERROR");
         case "SUCCESS":
             return console.log(styleTable[key]);
         default:
@@ -58,8 +58,8 @@ export function Logger(message:any, key?:LogLevelsStrings)
     }
 }
 
-//not used for anything
+//not used for anything yet
 export function SaveFile()
 {
-
+    console.table(ToSave);
 }
