@@ -5,14 +5,17 @@ import * as readline from 'readline';
 var rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
-    prompt: ">>>"
+    prompt: "> "
 });
 import {Logger} from './src/NewLogger';
 import {InitFunctions} from './src/terminal/CHandler';
+import {InitConsoleCommands} from './src/terminal/THandler';
 
 client.on('ready', async () => {
-    Logger("Logged in", "INFO");
-    
+    await InitFunctions().then(() => {
+        Logger(`Logged in as ${client.user!.tag}`, "INFO");
+        InitConsoleCommands(client, rl);
+    });
 });
 
 client.login(token);

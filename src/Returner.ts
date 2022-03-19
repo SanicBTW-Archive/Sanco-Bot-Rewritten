@@ -1,5 +1,4 @@
 //the returner is a little bit stupid but somehow works
-//comments will be moved to somewhere else or something
 import LoggerConfig from './data/settings/LoggerConfig.json';
 import TConf from './data/settings/TConf.json'
 
@@ -11,7 +10,6 @@ enum FieldTypes //lol field types m
 
 type FieldType = keyof typeof FieldTypes;
 
-//essential for everything, call this method when making a variable
 export function ReturnFields(type:FieldType,index:number):any
 {
     switch(type)
@@ -25,7 +23,6 @@ export function ReturnFields(type:FieldType,index:number):any
     }
 }
 
-//use if you want to get access to the option name, it cant be null fr
 export function ReturnOptionName(Fields:any):string
 {
     //failsafe
@@ -33,7 +30,6 @@ export function ReturnOptionName(Fields:any):string
     else throw new Error("Couldn't find the option name");
 }
 
-//use if you want to get access to the option state and if the state isnt null
 export function ReturnOptionState(Fields:any):boolean
 {
     //maybe another failsafe??
@@ -41,7 +37,6 @@ export function ReturnOptionState(Fields:any):boolean
     else throw new Error("Couldn't find the option state");
 }
 
-//use if you want to get access to the option value and if the value isnt null
 export function ReturnOptionValue(Fields:any):string
 {
     //failsafe seems to work
@@ -49,7 +44,6 @@ export function ReturnOptionValue(Fields:any):string
     else throw new Error("Couldn't find the option value or its null");
 }
 
-//only use this for the terminal config
 export function ReturnFuncPath(Fields:any):string
 {
     if(Fields.functionFile != null) return Fields.functionFile;

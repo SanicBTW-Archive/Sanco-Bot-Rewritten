@@ -23,16 +23,9 @@ let showDebugLogsState = ReturnOptionState(showDebugLogs);
 let ignoreLogErrors = ReturnFields("LoggerConfig", 2);
 let ignoreLogErrorsState = ReturnOptionState(ignoreLogErrors);
 
-const d = new Date();
-const theFuckingTime = `${d.getDate()}/${d.getMonth()}/${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()} -`;
-const logName = `${d.getDate()}_${d.getMonth()}_${d.getFullYear()}_${d.getHours()}_${d.getMinutes()}_${d.getSeconds()} | Sanic_Bot_Log.txt`;
-const logDirJaja = path.join(__dirname, "..", "logs", logName);
-
-
 export function Logger(message:any, key?:LogLevelsStrings)
 {
     const jaja = `[ ${key} ]`;
-    const forLogs = `${theFuckingTime} ${jaja} ${message}`;
 
     var styleTable = 
     {
@@ -44,7 +37,6 @@ export function Logger(message:any, key?:LogLevelsStrings)
         "SUCCESS": color(jaja).bgCyan.black + ` ${message}`
     };
 
-    ToSave.push(forLogs);
     switch(key)
     {
         case "INFO":
@@ -64,22 +56,4 @@ export function Logger(message:any, key?:LogLevelsStrings)
         default:
             return console.log(styleTable["oops"]);
     }
-}
-
-//maybe its useless lol
-//issues, it may print the logs in the same line instead of going to the next one :clown:
-export function SaveFile()
-{
-    console.table(ToSave);
-    const toWrite = JSON.stringify(ToSave.toString());
-    fs.writeFileSync(logDirJaja, toWrite);
-}
-
-//just a heavy copy paste from the logger function
-export function LogToFile(message:any, key?:LogLevelsStrings)
-{
-    const jaja = `[ ${key} ]`;
-    const forLogs = `${theFuckingTime} ${jaja} ${message}`;
-
-    ToSave.push(forLogs);
 }

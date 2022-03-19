@@ -4,7 +4,7 @@
         "1":
         {
             "optionName": "clear console on startup",
-            "optionState": true,
+            "optionState": false,
             "optionValue": null,
             "functionFile": "ClearConsoleStartup.ts"
         },
@@ -13,7 +13,7 @@
             "optionName": "terminal title",
             "optionState": null,
             "optionValue": "Sanic Bot",
-            "functionFile": "ChangeTTitle"
+            "functionFile": "ChangeConsoleTitle.ts"
         }
     }
 }
