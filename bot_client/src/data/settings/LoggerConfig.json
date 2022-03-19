@@ -2,13 +2,13 @@
     "options": {
         "1": 
         {
-            "optionName": "showDebugLogs",
+            "optionName": "show debug Logs",
             "optionState": true,
             "optionValue": null
         },
         "2":
         {
-            "optionName": "ignoreLogErrors",
+            "optionName": "ignore log errors",
             "optionState": true,
             "optionValue": null
         }

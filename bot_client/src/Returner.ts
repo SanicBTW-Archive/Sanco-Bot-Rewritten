@@ -1,7 +1,7 @@
 //the returner is a little bit stupid but somehow works
 //comments will be moved to somewhere else or something
-import LoggerConfig from './LoggerConfig.json';
-import { Logger } from './NewLogger';
+import LoggerConfig from './data/settings/LoggerConfig.json';
+import TConf from './data/settings/TConf.json'
 
 enum FieldTypes //lol field types m
 {
@@ -20,7 +20,8 @@ export function ReturnFields(type:FieldType,index:number):any
             let imgLoggerConfig:any = LoggerConfig.options;
             return imgLoggerConfig[index];
         case "TerminalConfig":
-            Logger("wip", "INFO");        
+            let TermConf:any = TConf.options;
+            return TermConf[index];
     }
 }
 
@@ -46,4 +47,11 @@ export function ReturnOptionValue(Fields:any):string
     //failsafe seems to work
     if(Fields.optionValue != null) return Fields.optionValue;
     else throw new Error("Couldn't find the option value or its null");
+}
+
+//only use this for the terminal config
+export function ReturnFuncPath(Fields:any):string
+{
+    if(Fields.functionFile != null) return Fields.functionFile;
+    else throw new Error("Couldn't find the option function path");
 }

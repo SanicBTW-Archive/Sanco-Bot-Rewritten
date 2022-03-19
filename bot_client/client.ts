@@ -7,7 +7,8 @@ var rl = readline.createInterface({
     output: process.stdout,
     prompt: ">>>"
 });
-import {Logger} from '../shared/NewLogger';
+import {Logger} from './src/NewLogger';
+import {InitFunctions} from './src/terminal/CHandler';
 
 client.on('ready', async () => {
     Logger("Logged in", "INFO");
