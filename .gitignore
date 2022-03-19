@@ -1,2 +1,2 @@
 /node_modules
-/src/Secrets/Token.json
+/bot_client/src/secrets/Token.json

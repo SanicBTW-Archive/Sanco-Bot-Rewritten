@@ -1,0 +1,10 @@
+{
+    "amount": 1,
+    "options": {
+        "1": {
+            "optionName": "showDebugLogs",
+            "optionState": true,
+            "optionValue": null
+        }
+    }
+}
