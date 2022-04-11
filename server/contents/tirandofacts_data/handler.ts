@@ -11,7 +11,7 @@ module.exports = {
     lastUpdate: details['last-update'],
     reqUrl: details['request-url'],
     execute: function(){
-        var file = path.join(__dirname, "pushThisOne.txt");
+        var file = path.join(__dirname, "TirandoFacts.txt");
         fs.readFile(file, "utf-8", (err, data) => {
             router.get(details['request-url'], (req, res) => {
                 res.send(data);

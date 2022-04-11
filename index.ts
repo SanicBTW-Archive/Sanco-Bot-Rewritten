@@ -12,13 +12,21 @@ import {Logger} from './src/NewLogger';
 import {InitFunctions} from './src/terminal/ConfHandler';
 import {InitConsoleCommands} from './src/terminal/THandler';
 import {prefix} from './src/data/config/DConf.json';
-import {startServer} from './server/server';
+import {requestNote, startServer, url, urlReq} from './server/server';
+import axios from 'axios';
+import { notesName, notesAlias } from './server/MainHandler';
 
 startServer();
 
 client.on('ready', async () => {
     await InitFunctions().then(() => {
         Logger(`Logged in as ${client.user!.tag}`, "INFO");
+        client.user!.setPresence({
+            activities:[{
+                name: "v1",
+                type: 'PLAYING'
+            }], status: "dnd"
+        })
         InitConsoleCommands(client, rl);
     });
 });
@@ -46,9 +54,11 @@ client.on('messageCreate', async(message) => {
             resultMessage.edit({embeds: [pingresult]});
         });
     }
-    if(args[0] === "request")
+    if(args[0] === "req")
     {
-
+        var jijija = args[1];
+        var respEmbed = await requestNote(jijija);
+        message.channel.send({embeds:[respEmbed]});
     }
 });
 
