@@ -1,8 +1,6 @@
 //todo: improve spaghetti aka the switch case lol
 import color from 'colorts';
 import { ReturnFields, ReturnOptionState} from './Returner';
-import fs from 'fs';
-import path from 'path';
 
 enum LogLevels 
 {

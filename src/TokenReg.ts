@@ -2,8 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import * as readline from 'readline';
 
-var tokenFile = path.join(__dirname, 'secrets', 'Token.json');
-var tokenDir = path.join(__dirname, 'secrets');
+var tokenFile = path.join(__dirname,'data', 'secrets', 'Token.json');
+var tokenDir = path.join(__dirname,'data', 'secrets');
 var rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout

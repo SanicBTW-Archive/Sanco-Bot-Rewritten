@@ -3,22 +3,24 @@
 import * as readline from 'readline';
 import Discord from 'discord.js';
 import { Logger } from '../NewLogger';
-import path from 'path';
+import axios from 'axios';
+import { urlReq } from '../../server/server';
 
-export function InitConsoleCommands(client:Discord.Client, rl:readline.Interface){
+export async function InitConsoleCommands(client:Discord.Client, rl:readline.Interface){
     rl.prompt();
     
-    rl.on('line', (line) => {
-        Logger(`Executed command: ${line}`, "DEBUG");
+    rl.on('line', async (line) => {
         let args = line.split(" ");
 
-        var jaja = path.join('commads', line);
-
-        //const file = require(`./commands/${line}`);
-        //file.exec();
-        Logger(jaja, "DEBUG");
         switch(args[0])
         {
+            case "req":
+                rl.question('what do you want to request ', async (requestjaja) => {
+                    const resp = await axios.get(`${urlReq}${requestjaja}`);
+                    Logger(resp.data, "DEBUG");
+                    rl.prompt();
+                })
+                break;
             case "exit":
                 rl.close();
                 break;

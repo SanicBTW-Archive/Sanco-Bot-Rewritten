@@ -1,6 +1,6 @@
 //the returner is a little bit stupid but somehow works
-import LoggerConfig from './data/settings/LoggerConfig.json';
-import TConf from './data/settings/TConf.json'
+import LoggerConfig from './data/config/LoggerConfig.json';
+import TConf from './data/config/TConf.json'
 
 enum FieldTypes //lol field types m
 {
