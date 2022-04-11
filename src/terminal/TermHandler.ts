@@ -5,6 +5,7 @@ import Discord from 'discord.js';
 import { Logger } from '../NewLogger';
 import axios from 'axios';
 import { urlReq } from '../../server/server';
+import { StartHandler } from '../../server/MainHandler';
 
 export async function InitConsoleCommands(client:Discord.Client, rl:readline.Interface){
     rl.prompt();
@@ -14,13 +15,6 @@ export async function InitConsoleCommands(client:Discord.Client, rl:readline.Int
 
         switch(args[0])
         {
-            case "req":
-                rl.question('what do you want to request ', async (requestjaja) => {
-                    const resp = await axios.get(`${urlReq}${requestjaja}`);
-                    Logger(resp.data, "DEBUG");
-                    rl.prompt();
-                })
-                break;
             case "exit":
                 rl.close();
                 break;

@@ -10,7 +10,7 @@ var rl = readline.createInterface({
 });
 import {Logger} from './src/NewLogger';
 import {InitFunctions} from './src/terminal/ConfHandler';
-import {InitConsoleCommands} from './src/terminal/THandler';
+import {InitConsoleCommands} from './src/terminal/TermHandler';
 import {prefix} from './src/data/config/DConf.json';
 import {requestNote, startServer, url, urlReq} from './server/server';
 import axios from 'axios';
