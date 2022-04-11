@@ -3,7 +3,7 @@ var app = express();
 import { Logger } from '../src/NewLogger';
 import { notesName, notesAlias, StartHandler, notesCreationDate, notesLastUpdate, notesRequest } from './MainHandler';
 export var router = express.Router();
-export var url = "http://localhost:3000";
+export var url = "http://localhost:5555";
 export var urlReq = url + '/';
 import Discord from 'discord.js';
 import axios, { AxiosResponse } from 'axios';
@@ -13,7 +13,7 @@ StartHandler(); //Why would i do this :clown:
 app.use(router);
 
 export function startServer(){
-    app.listen(3000, function() {
+    app.listen(5555, function() {
         Logger(`Node Server running on ${url}`,"SUCCESS");
     })
 }
