@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { response } from 'express';
 var app = express();
 import { Logger } from '../src/NewLogger';
 import { notesName, notesAlias, StartHandler, notesCreationDate, notesLastUpdate, notesRequest } from './MainHandler';
@@ -36,6 +36,14 @@ export async function requestNote(toReq:string):Promise<Discord.MessageEmbed>
     else
     {
         var letsgo = doCheck(toReq);
+        if(letsgo == 999999999)
+        {
+            const errorEmbed = new Discord.MessageEmbed()
+            .setTitle('Oops')
+            .setDescription('No pudimos encontrar eso, prueba otra vez')
+            .setColor('RED');
+            return errorEmbed;
+        }
         resp = await axios.get(`${url}${notesRequest[letsgo]}`);
         responseEmbed = new Discord.MessageEmbed()
         .setTitle(notesName[letsgo])
@@ -49,6 +57,9 @@ function doCheck(jaja:string):number
     var current = 0;
     switch(jaja)
     {
+        default:
+            current = 999999999;  //couldnt find that one
+            break;
         case notesAlias[0]:
             current = 0;
             break;
