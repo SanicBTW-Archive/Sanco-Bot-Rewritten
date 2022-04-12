@@ -11,10 +11,8 @@ var rl = readline.createInterface({
 import {Logger} from './src/NewLogger';
 import {InitFunctions} from './src/terminal/ConfHandler';
 import {InitConsoleCommands} from './src/terminal/TermHandler';
-import {prefix} from './src/data/config/DConf.json';
+import {prefix, presName} from './src/data/config/DConf.json';
 import {requestNote, startServer, url, urlReq} from './server/server';
-import axios from 'axios';
-import { notesName, notesAlias } from './server/MainHandler';
 
 startServer();
 
@@ -23,7 +21,7 @@ client.on('ready', async () => {
         Logger(`Logged in as ${client.user!.tag}`, "INFO");
         client.user!.setPresence({
             activities:[{
-                name: "v1",
+                name: presName,
                 type: 'PLAYING'
             }], status: "dnd"
         })
@@ -38,7 +36,7 @@ client.on('messageCreate', async(message) => {
     if(args[0] === "ping")
     {
         const calcping = new Discord.MessageEmbed()
-        .setTitle('Calculando el ping del bot...');
+        .setTitle('Calculando el ping...');
 
         message.channel.send({embeds:[calcping]}).then(resultMessage => {
             const msgpingsomething = resultMessage.createdTimestamp - message.createdTimestamp;
