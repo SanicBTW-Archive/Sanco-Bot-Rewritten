@@ -1,6 +1,6 @@
 //todo: improve spaghetti aka the switch case lol
 import color from 'colorts';
-import { ReturnFields, ReturnOptionState} from './Returner';
+import config from './data/config/LoggerConfig.json';
 
 enum LogLevels 
 {
@@ -14,12 +14,8 @@ enum LogLevels
 type LogLevelsStrings = keyof typeof LogLevels;
 
 var ToSave:Array<string> = []; //Used to save the logs in a file when the bot is closed
-
-let showDebugLogs = ReturnFields("LoggerConfig", 1);
-let showDebugLogsState = ReturnOptionState(showDebugLogs);
-
-let ignoreLogErrors = ReturnFields("LoggerConfig", 2);
-let ignoreLogErrorsState = ReturnOptionState(ignoreLogErrors);
+let showDebugLogsState = config.options[1].optionState;
+let ignoreLogErrorsState = config.options[2].optionState;
 
 export function Logger(message:any, key?:LogLevelsStrings)
 {

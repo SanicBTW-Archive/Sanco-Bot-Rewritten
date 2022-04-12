@@ -3,9 +3,6 @@
 import * as readline from 'readline';
 import Discord from 'discord.js';
 import { Logger } from '../NewLogger';
-import axios from 'axios';
-import { urlReq } from '../../server/server';
-import { StartHandler } from '../../server/MainHandler';
 
 export async function InitConsoleCommands(client:Discord.Client, rl:readline.Interface){
     rl.prompt();

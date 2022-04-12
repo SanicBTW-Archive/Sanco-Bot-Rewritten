@@ -1,12 +1,10 @@
 import {Logger} from '../../NewLogger';
-import { ReturnFields, ReturnOptionName, ReturnOptionValue } from '../../Returner';
-
+import config from '../../data/config/TConf.json';
 
 module.exports = {
     exec: function(){
-        var JsonFields = ReturnFields("TerminalConfig", 2);
-        var OptName = ReturnOptionName(JsonFields);
-        var OptVal = ReturnOptionValue(JsonFields);
+        var OptName = config.options[2].optionName;
+        var OptVal = config.options[2].optionValue;
         if(OptName == "terminal title") //just in case, again
         {
             if(OptVal != null) process.title = OptVal;

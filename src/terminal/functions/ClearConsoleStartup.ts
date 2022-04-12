@@ -1,11 +1,10 @@
 import { Logger } from '../../NewLogger';
-import { ReturnFields, ReturnOptionName, ReturnOptionState } from '../../Returner';
+import config from '../../data/config/TConf.json';
 
 module.exports = {
     exec: function(){
-        var JsonFields = ReturnFields("TerminalConfig", 1);
-        var OptName = ReturnOptionName(JsonFields);
-        var OptState = ReturnOptionState(JsonFields);
+        var OptName = config.options[1].optionName;
+        var OptState = config.options[1].optionState;
         if(OptName == "clear console on startup") //just in case
         {
             switch(OptState)
