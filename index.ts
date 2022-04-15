@@ -54,8 +54,7 @@ client.on('messageCreate', async(message) => {
     }
     if(args[0] === "req")
     {
-        var jijija = args[1];
-        var respEmbed = await requestNote(jijija);
+        var respEmbed = await requestNote(args[1], args[2]);
         message.channel.send({embeds:[respEmbed]});
     }
 });

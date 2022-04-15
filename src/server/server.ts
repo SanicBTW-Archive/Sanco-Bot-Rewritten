@@ -1,7 +1,7 @@
 import express from 'express';
 var app = express();
 import { Logger } from '../NewLogger';
-import { noteName, noteAlias, StartHandler, noteCreationDate, noteLastUpdate, noteRequest, noteList } from './MainHandler';
+import { noteName, noteAlias, StartHandler, noteCreationDate, noteLastUpdate, noteRequest, noteList, noteLocked, notePasswd } from './MainHandler';
 export var router = express.Router();
 export var url = "http://localhost:5555";
 export var urlReq = url + '/';
@@ -23,7 +23,7 @@ export function startServer(){
     })
 }
 
-export async function requestNote(toReq:string):Promise<Discord.MessageEmbed>
+export async function requestNote(toReq:string, password?:string):Promise<Discord.MessageEmbed>
 {
     let responseEmbed = new Discord.MessageEmbed()
     let resp:AxiosResponse;
@@ -51,6 +51,22 @@ export async function requestNote(toReq:string):Promise<Discord.MessageEmbed>
             .setDescription('No pudimos encontrar eso, prueba otra vez')
             .setColor('RED');
             return errorEmbed;
+        }
+        if(noteLocked[newLesgo] == true && password == null)
+        {
+            //would've made it so it waits 10s until the password its said
+            const noteLocked = new Discord.MessageEmbed()
+            .setTitle('Nota bloqueada! - 403') //aka forbidden
+            .setDescription('Esta nota esta bloqueada por una contraseña, ejecuta el comando otra vez con la contraseña `s?req <nota> <contraseña>`')
+            .setColor('RED');
+            return noteLocked;
+        }
+        else if(noteLocked[newLesgo] == true && password != notePasswd[newLesgo])
+        {
+            const wrongPass = new Discord.MessageEmbed()
+            .setTitle('Contraseña incorrecta')
+            .setColor('RED');
+            return wrongPass;
         }
         resp = await axios.get(`${url}${noteRequest[newLesgo]}`);
         responseEmbed = new Discord.MessageEmbed()

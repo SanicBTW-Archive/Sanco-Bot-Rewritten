@@ -1,7 +1,9 @@
 {
     "name": "Tirando Facts",
     "note-alias": "tirando-facts",
-    "creation-date": "null",
+    "creation-date": null,
     "last-update": "11-04-2022",
-    "request-url": "/facts"
+    "request-url": "/facts",
+    "locked": false,
+    "password": null
 }

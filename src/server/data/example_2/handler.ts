@@ -13,7 +13,7 @@ module.exports = {
     locked: details.locked,
     passwdToUnlock: details.password,
     execute: function(){
-        var file = path.join(__dirname, "TirandoFacts.txt");
+        var file = path.join(__dirname, "holabb.txt");
         fs.readFile(file, "utf-8", (err, data) => {
             router.get(details['request-url'], (req, res) => {
                 res.send(data);

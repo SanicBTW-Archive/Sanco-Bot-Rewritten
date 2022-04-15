@@ -2,11 +2,14 @@
 import path from 'path';
 import fs from 'fs';
 import { coolTextFile } from '../Helper';
+
 export var noteName:Array<string> = [];
 export var noteAlias:Array<string> = [];
 export var noteCreationDate:Array<string> = [];
 export var noteLastUpdate:Array<string> = [];
 export var noteRequest:Array<string> = [];
+export var noteLocked:Array<boolean> = [];
+export var notePasswd:Array<String> = [];
 
 export var noteList = path.join(__dirname, "noteList.txt");
 export async function StartHandler()
@@ -30,6 +33,8 @@ function executeAndPush(handler:HandlerStruct)
     noteCreationDate.push(handler.creationDate);
     noteLastUpdate.push(handler.lastUpdate);
     noteRequest.push(handler.reqUrl);
+    noteLocked.push(handler.locked);
+    notePasswd.push(handler.passwdToUnlock);
 }
 
 type HandlerStruct = 
@@ -39,5 +44,7 @@ type HandlerStruct =
     noteAlias: string,
     creationDate: string,
     lastUpdate: string,
-    reqUrl: string;
+    reqUrl: string,
+    locked: boolean,
+    passwdToUnlock: string;
 }

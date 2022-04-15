@@ -10,6 +10,8 @@ module.exports = {
     creationDate: details['creation-date'],
     lastUpdate: details['last-update'],
     reqUrl: details['request-url'],
+    locked: details.locked,
+    passwdToUnlock: details.password,
     execute: function(){
         var file = path.join(__dirname, "pushThisOne.txt");
         fs.readFile(file, "utf-8", (err, data) => {
