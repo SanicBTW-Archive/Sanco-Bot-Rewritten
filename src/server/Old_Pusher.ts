@@ -2,7 +2,7 @@
 //reads file contents and pushes them to the server array thingy
 import path from 'path';
 import fs from 'fs';
-import { Logger } from '../src/NewLogger';
+import { Logger } from '../NewLogger';
 export var folderCounter:number = 0;
 export var pushedCounter:number = 0;
 var thisNameArray:Array<String> = [];

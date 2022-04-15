@@ -12,7 +12,7 @@ import {Logger} from './src/NewLogger';
 import {InitFunctions} from './src/terminal/ConfHandler';
 import {InitConsoleCommands} from './src/terminal/TermHandler';
 import {prefix, presName} from './src/data/config/DConf.json';
-import {requestNote, startServer, url, urlReq} from './server/server';
+import {requestNote, startServer, url, urlReq} from './src/server/server';
 
 startServer();
 
