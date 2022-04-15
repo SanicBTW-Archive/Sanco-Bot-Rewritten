@@ -1,7 +1,7 @@
-import express, { response } from 'express';
+import express from 'express';
 var app = express();
 import { Logger } from '../NewLogger';
-import { dataName, dataAlias, StartHandler, dataCreationDate, dataLastUpdate, dataRequest, dataList } from './MainHandler';
+import { noteName, noteAlias, StartHandler, noteCreationDate, noteLastUpdate, noteRequest, noteList } from './MainHandler';
 export var router = express.Router();
 export var url = "http://localhost:5555";
 export var urlReq = url + '/';
@@ -14,7 +14,7 @@ StartHandler(); //Why would i do this :clown:
 app.use(router);
 
 router.get('/', (req, res)=>{
-    res.send("API Ver: 6")
+    res.send("API Ver: 7")
 })
 
 export function startServer(){
@@ -30,20 +30,21 @@ export async function requestNote(toReq:string):Promise<Discord.MessageEmbed>
     if(toReq == null)
     {
         const webapiv = await axios.get(`${url}/`);
-        var dataxd = await coolTextFile(dataList);
+        var notesxd = await coolTextFile(noteList);
         const helpMenu = new Discord.MessageEmbed()
-        .setTitle('Datos')
+        .setTitle('Notas')
         .setDescription(webapiv.data)
-        for(var i in dataxd)
+        .setColor('LIGHT_GREY')
+        for(var i in notesxd)
         {
-            helpMenu.addField(`${dataName[i]}`, `${dataAlias[i]}`, true)
+            helpMenu.addField(`Nombre de la nota: ${noteName[i]}\nCreada el: ${noteCreationDate[i]}\nActualizada el: ${noteLastUpdate[i]}\n`, `Alias para poder mostrar la nota: ${noteAlias[i]}`)
         }
         return helpMenu;
     }
     else
     {
-        var letsgo = doCheck(toReq);
-        if(letsgo == 999999999)
+        var newLesgo = noteAlias.indexOf(toReq);
+        if(newLesgo == -1)
         {
             const errorEmbed = new Discord.MessageEmbed()
             .setTitle('Oops - 404') //hard code it lol
@@ -51,28 +52,11 @@ export async function requestNote(toReq:string):Promise<Discord.MessageEmbed>
             .setColor('RED');
             return errorEmbed;
         }
-        resp = await axios.get(`${url}${dataRequest[letsgo]}`);
+        resp = await axios.get(`${url}${noteRequest[newLesgo]}`);
         responseEmbed = new Discord.MessageEmbed()
-        .setTitle(dataName[letsgo])
+        .setTitle(noteName[newLesgo])
         .setDescription(resp.data)
+        .setColor('BLURPLE')
     }
     return responseEmbed;
-}
-
-function doCheck(jaja:string):number
-{
-    var current = 0;
-    switch(jaja)
-    {
-        default:
-            current = 999999999;  //couldnt find that one
-            break;
-        case dataAlias[0]:
-            current = 0;
-            break;
-        case dataAlias[1]:
-            current = 1;
-            break;
-    }
-    return current;
 }

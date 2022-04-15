@@ -1,18 +1,17 @@
 //uses the same concept as the dynamic terminal settings
 import path from 'path';
 import fs from 'fs';
-import { Logger } from '../NewLogger';
 import { coolTextFile } from '../Helper';
-export var dataName:Array<string> = [];
-export var dataAlias:Array<string> = [];
-export var dataCreationDate:Array<string> = [];
-export var dataLastUpdate:Array<string> = [];
-export var dataRequest:Array<string> = [];
+export var noteName:Array<string> = [];
+export var noteAlias:Array<string> = [];
+export var noteCreationDate:Array<string> = [];
+export var noteLastUpdate:Array<string> = [];
+export var noteRequest:Array<string> = [];
 
-export var dataList = path.join(__dirname, "dataList.txt");
+export var noteList = path.join(__dirname, "noteList.txt");
 export async function StartHandler()
 {
-    var data = await coolTextFile(dataList);
+    var data = await coolTextFile(noteList);
     for(var i in data)
     {
         var handler = path.join(__dirname, "data", data[i], "handler.ts");
@@ -26,33 +25,12 @@ export async function StartHandler()
 function executeAndPush(handler:HandlerStruct)
 {
     handler.execute();
-    dataName.push(handler.dataName);
-    dataAlias.push(handler.noteAlias);
-    dataCreationDate.push(handler.creationDate);
-    dataLastUpdate.push(handler.lastUpdate);
-    dataRequest.push(handler.reqUrl);
+    noteName.push(handler.dataName);
+    noteAlias.push(handler.noteAlias);
+    noteCreationDate.push(handler.creationDate);
+    noteLastUpdate.push(handler.lastUpdate);
+    noteRequest.push(handler.reqUrl);
 }
-
-/* Old handler
-var scanfolder = path.join(__dirname, "contents");
-export async function OldHandler()
-{
-    const folders = fs.readdirSync(scanfolder).filter(folder => folder.endsWith("_data"));
-    for(const folder of folders)
-    {
-        //searches the handler
-        var newP = path.join(scanfolder, folder, "handler.ts");
-        if(fs.existsSync(newP)){
-            const fileToExec = require(newP);
-            fileToExec.execute();
-            notesName.push(fileToExec.dataName);
-            notesAlias.push(fileToExec.noteAlias);
-            notesCreationDate.push(fileToExec.creationDate);
-            notesLastUpdate.push(fileToExec.lastUpdate);
-            notesRequest.push(fileToExec.reqUrl);
-        }
-    }
-}*/
 
 type HandlerStruct = 
 {
