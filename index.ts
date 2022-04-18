@@ -13,6 +13,7 @@ import {InitFunctions} from './src/terminal/ConfHandler';
 import {InitConsoleCommands} from './src/terminal/TermHandler';
 import {prefix, presName} from './src/data/config/DConf.json';
 import {requestNote, startServer, url, urlReq} from './src/server/server';
+import fetch from 'node-fetch';
 
 startServer();
 
@@ -56,6 +57,28 @@ client.on('messageCreate', async(message) => {
     {
         var respEmbed = await requestNote(args[1], args[2]);
         message.channel.send({embeds:[respEmbed]});
+    }
+    if(args[0] === "submit")
+    {
+        //heavily based off some stack overflow question: https://stackoverflow.com/questions/67652628/reading-file-attachments-ex-txt-file-discord-js
+        const file = message.attachments.first()?.url;
+        if(!file) return Logger("no attached file found", "WARNING");
+        try
+        {
+            message.reply("Leyendo el archivo");
+            const resp = await fetch(file);
+            if(!resp.ok){
+                message.reply(resp.statusText);
+            }
+            const textFile = await resp.text();
+            if(textFile){
+                message.channel.send(`\`\`\`${textFile}\`\`\``);
+            }
+        }
+        catch (excp)
+        {
+            Logger(excp, "ERROR");
+        }
     }
 });
 
