@@ -1,7 +1,9 @@
 //uses the same concept as the dynamic terminal settings
 import path from 'path';
 import fs from 'fs';
-import { coolTextFile } from '../Helper';
+import { coolTextFile, scanDir } from '../Helper';
+import config from '../data/config/DConf.json';
+import { Logger } from '../NewLogger';
 
 export var noteName:Array<string> = [];
 export var noteAlias:Array<string> = [];
@@ -11,18 +13,32 @@ export var noteRequest:Array<string> = [];
 export var noteLocked:Array<boolean> = [];
 export var notePasswd:Array<String> = [];
 
+export var useFile = config.options[1].optionState;
+
 export var noteList = path.join(__dirname, "noteList.txt");
+export var notesFolder = path.join(__dirname, "notes");
+
 export async function StartHandler()
 {
-    var data = await coolTextFile(noteList);
-    for(var i in data)
+    var note:Array<string> = ["holis"];
+    if(useFile)
     {
-        var handler = path.join(__dirname, "data", data[i], "handler.ts");
+        note = await coolTextFile(noteList);
+    }
+    else 
+    {
+        note = await scanDir(notesFolder);
+    }
+    for(var i in note)
+    {
+        var handler = path.join(notesFolder, note[i], "handler.ts");
         if(fs.existsSync(handler)){
             const thefunny:HandlerStruct = require(handler);
             executeAndPush(thefunny);
         }
     }
+
+
 }
 
 function executeAndPush(handler:HandlerStruct)

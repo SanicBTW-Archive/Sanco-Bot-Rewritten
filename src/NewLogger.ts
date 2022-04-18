@@ -13,7 +13,6 @@ enum LogLevels
 
 type LogLevelsStrings = keyof typeof LogLevels;
 
-var ToSave:Array<string> = []; //Used to save the logs in a file when the bot is closed
 let showDebugLogsState = config.options[1].optionState;
 let ignoreLogErrorsState = config.options[2].optionState;
 

@@ -1,4 +1,12 @@
 {
     "prefix": "s?",
-    "presName": "v1 - Beta 25"
+    "presName": "v1 - Beta 25",
+    "options":
+    {
+        "1": 
+        {
+            "optionName": "Use data list file",
+            "optionState": false
+        }
+    }
 }

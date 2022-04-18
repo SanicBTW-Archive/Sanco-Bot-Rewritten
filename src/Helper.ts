@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 import { Logger } from './NewLogger';
 
 //highly inspired in fnf coolutil.hx method
@@ -6,18 +7,17 @@ export async function coolTextFile(path:string):Promise<string[]>
 {
     var daList = fs.readFileSync(path, 'utf-8').trim().split('\n');
     return daList;
-    /* old
-    var daList:Array<string> = [];
-    fs.readFile(path, 'utf-8', (err, data) => {
-        if(err) return Logger(err, "ERROR");
-        var thingy = data.trim().split('\n');
-        for(var i in thingy)
-        {
-            var index = i;
-            var entryIndex = thingy[i]; 
-            Logger("Being called from helper | " + `${index} | ${entryIndex}`, "DEBUG");
-            daList.push(entryIndex);
-        }
-    });
-    return daList;*/
+}
+
+//will scan the given dir and return the folders in the order as it is in the filesystem
+export async function scanDir(dir:string):Promise<string[]> 
+{
+    var returner:Array<string> = [];
+    var scan = path.join(dir);
+    var jaja = fs.readdirSync(scan);
+    for(var i in jaja)
+    {
+        returner.push(jaja[i]);
+    }
+    return returner;
 }

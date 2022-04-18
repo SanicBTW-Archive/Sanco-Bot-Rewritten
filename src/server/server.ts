@@ -1,13 +1,13 @@
 import express from 'express';
 var app = express();
 import { Logger } from '../NewLogger';
-import { noteName, noteAlias, StartHandler, noteCreationDate, noteLastUpdate, noteRequest, noteList, noteLocked, notePasswd } from './MainHandler';
+import { noteName, noteAlias, StartHandler, noteCreationDate, noteLastUpdate, noteRequest, noteList, noteLocked, notePasswd, useFile, notesFolder } from './MainHandler';
 export var router = express.Router();
 export var url = "http://localhost:5555";
 export var urlReq = url + '/';
 import Discord from 'discord.js';
 import axios, { AxiosResponse } from 'axios';
-import { coolTextFile } from '../Helper';
+import { coolTextFile, scanDir } from '../Helper';
 
 StartHandler(); //Why would i do this :clown:
 
@@ -29,8 +29,16 @@ export async function requestNote(toReq:string, password?:string):Promise<Discor
     let resp:AxiosResponse;
     if(toReq == null)
     {
+        var notesxd:string[];
         const webapiv = await axios.get(`${url}/`);
-        var notesxd = await coolTextFile(noteList);
+        if(useFile)
+        {
+            notesxd = await coolTextFile(noteList);
+        }
+        else
+        {
+            notesxd = await scanDir(notesFolder);
+        }
         const helpMenu = new Discord.MessageEmbed()
         .setTitle('Notas')
         .setDescription(webapiv.data)
