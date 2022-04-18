@@ -1,4 +1,4 @@
-import Discord, { Intents } from 'discord.js';
+import Discord from 'discord.js';
 const intents = new Discord.Intents(32767);
 var client:Discord.Client = new Discord.Client({intents})!;
 import {token} from './src/data/secrets/Token.json';

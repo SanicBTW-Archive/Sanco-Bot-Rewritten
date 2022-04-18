@@ -14,7 +14,7 @@ StartHandler(); //Why would i do this :clown:
 app.use(router);
 
 router.get('/', (req, res)=>{
-    res.send("API Ver: 7")
+    res.send("API Ver: 8")
 })
 
 export function startServer(){

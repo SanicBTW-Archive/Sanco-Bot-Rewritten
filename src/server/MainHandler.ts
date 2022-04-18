@@ -23,10 +23,12 @@ export async function StartHandler()
     var note:Array<string> = ["holis"];
     if(useFile)
     {
+        Logger("Using Note List file for files", "INFO");
         note = await coolTextFile(noteList);
     }
     else 
     {
+        Logger("Scanning directory for notes", "INFO");
         note = await scanDir(notesFolder);
     }
     for(var i in note)
