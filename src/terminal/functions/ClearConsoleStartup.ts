@@ -2,6 +2,7 @@ import { Logger } from '../../NewLogger';
 import config from '../../data/config/TConf.json';
 
 module.exports = {
+    alias: "clear-console",
     exec: function(){
         var OptName = config.options[1].optionName;
         var OptState = config.options[1].optionState;

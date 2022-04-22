@@ -5,6 +5,7 @@ import Discord from 'discord.js';
 import { Logger } from '../NewLogger';
 import { started, startServer } from '../server/server';
 import {rl, client} from '../../index';
+import { availableFunc, pathToFunc } from './ConfHandler';
 
 export async function InitConsoleCommands(){
     rl.prompt();
@@ -15,17 +16,43 @@ export async function InitConsoleCommands(){
         if(args[0] == "exit") 
             rl.close();
         if(args[0] === "start" && args[1] === "server")
+        {
+            if(started != true){
+                await startServer().then(() => {
+                    rl.prompt();
+                })
+            }
+            else
             {
-                if(started != true){
-                    await startServer().then(() => {
-                        rl.prompt();
-                    })
-                }
-                else
+                Logger("Already started!", "WARNING");
+            }
+        }
+
+        if(args[0] === "execute")
+        {
+            if(args[1] === "")
+            {
+                Logger("functions menu");
+                for(var i in availableFunc)
                 {
-                    Logger("Already started!", "WARNING");
+                    Logger(availableFunc[i]);
                 }
             }
+            else
+            {
+                var searchIndex = availableFunc.indexOf(args[1]);
+                if(searchIndex == -1)
+                {
+                    Logger("error", "ERROR");
+                }
+                if(args[1] == availableFunc[searchIndex])
+                {
+                    var the = require(pathToFunc[searchIndex]);
+                    the.exec();
+                }
+            }
+        }
+
         rl.prompt();
     }).on('close', () => {
         client.destroy();

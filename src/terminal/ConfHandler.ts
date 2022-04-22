@@ -1,16 +1,27 @@
 //config handler
 import { Logger } from '../NewLogger';
 import path from 'path';
-import fs from 'fs';
+import { scanDirWFilt } from '../Helper';
+
+export var availableFunc:Array<string> = [];
+export var pathToFunc:Array<string> = [];
 
 export async function InitFunctions() 
 {
     var the = path.join(__dirname, 'functions');
-    const functionFiles = fs.readdirSync(the).filter(file => file.endsWith(".ts"));
-    for(const file of functionFiles)
+    var functionFiles = await scanDirWFilt(the, "ts");
+    for(var i in functionFiles)
     {
-        var the2 = path.join(the, file);
-        const optFunc = require(the2);
+        var file = path.join(the, functionFiles[i]);
+        pathToFunc.push(file);
+        const optFunc:FuncFileStruct = require(file);
+        availableFunc.push(optFunc.alias);
         optFunc.exec();
     }
+}
+
+type FuncFileStruct =
+{
+    alias:string,
+    exec:() => any
 }

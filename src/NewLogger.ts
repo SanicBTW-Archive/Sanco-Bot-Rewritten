@@ -22,7 +22,6 @@ export function Logger(message:any, key?:LogLevelsStrings)
 
     var styleTable = 
     {
-        "oops": color("Log Level not set, check your code ").bgRed.black.underline + ` ${message}`,
         "INFO" : color(jaja).bgBlue.black + ` ${message}`,
         "WARNING": color(jaja).bgYellow.black + ` ${message}`,
         "ERROR": color(jaja).bgRed.black + ` ${message}`,
@@ -46,7 +45,5 @@ export function Logger(message:any, key?:LogLevelsStrings)
             else throw Logger("Can't show debug logs if the option is disabled", "ERROR");
         case "SUCCESS":
             return console.log(styleTable[key]);
-        default:
-            return console.log(styleTable["oops"]);
     }
 }
