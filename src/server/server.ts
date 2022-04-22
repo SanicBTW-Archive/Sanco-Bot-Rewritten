@@ -6,31 +6,33 @@ export var router = express.Router();
 export var url = "http://localhost:5555";
 export var urlReq = url + '/';
 import Discord from 'discord.js';
-import axios, { AxiosResponse } from 'axios';
+import fetch, {Response} from 'node-fetch';
 import { coolTextFile, scanDir } from '../Helper';
+export var started:boolean = false;
 
 StartHandler(); //Why would i do this :clown:
 
 app.use(router);
 
 router.get('/', (req, res)=>{
-    res.send("API Ver: 8")
+    res.send("API Ver: 9")
 })
 
-export function startServer(){
+export async function startServer(){
     app.listen(5555, function() {
         Logger(`Node Server running on ${url}`,"SUCCESS");
+        started = true;
     })
 }
 
 export async function requestNote(toReq:string, password?:string):Promise<Discord.MessageEmbed>
 {
     let responseEmbed = new Discord.MessageEmbed()
-    let resp:AxiosResponse;
+    let resp:Response;
     if(toReq == null)
     {
         var notesxd:string[];
-        const webapiv = await axios.get(`${url}/`);
+        const webapiv = await fetch(`${url}/`);
         if(useFile)
         {
             notesxd = await coolTextFile(noteList);
@@ -41,7 +43,7 @@ export async function requestNote(toReq:string, password?:string):Promise<Discor
         }
         const helpMenu = new Discord.MessageEmbed()
         .setTitle('Notas')
-        .setDescription(webapiv.data)
+        .setDescription((await webapiv.text()))
         .setColor('LIGHT_GREY')
         for(var i in notesxd)
         {
@@ -76,10 +78,10 @@ export async function requestNote(toReq:string, password?:string):Promise<Discor
             .setColor('RED');
             return wrongPass;
         }
-        resp = await axios.get(`${url}${noteRequest[newLesgo]}`);
+        resp = await fetch(`${url}${noteRequest[newLesgo]}`);
         responseEmbed = new Discord.MessageEmbed()
         .setTitle(noteName[newLesgo])
-        .setDescription(resp.data)
+        .setDescription((await resp.text()))
         .setColor('BLURPLE')
     }
     return responseEmbed;

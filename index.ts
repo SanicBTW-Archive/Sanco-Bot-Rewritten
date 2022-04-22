@@ -1,9 +1,9 @@
 import Discord from 'discord.js';
 const intents = new Discord.Intents(32767);
-var client:Discord.Client = new Discord.Client({intents})!;
+export var client:Discord.Client = new Discord.Client({intents})!;
 import {token} from './src/data/secrets/Token.json';
 import * as readline from 'readline';
-var rl = readline.createInterface({
+export var rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
     prompt: "> "
@@ -12,10 +12,10 @@ import {Logger} from './src/NewLogger';
 import {InitFunctions} from './src/terminal/ConfHandler';
 import {InitConsoleCommands} from './src/terminal/TermHandler';
 import {prefix, presName} from './src/data/config/DConf.json';
-import {requestNote, startServer, url, urlReq} from './src/server/server';
-import fetch from 'node-fetch';
+import {requestNote, startServer, url, urlReq, started} from './src/server/server';
+import fetch, {Response} from 'node-fetch';
 
-startServer();
+//startServer();
 
 client.on('ready', async () => {
     await InitFunctions().then(() => {
@@ -26,7 +26,7 @@ client.on('ready', async () => {
                 type: 'PLAYING'
             }], status: "dnd"
         })
-        InitConsoleCommands(client, rl);
+        InitConsoleCommands();
     });
 });
 
@@ -39,6 +39,20 @@ client.on('messageCreate', async(message) => {
         const calcping = new Discord.MessageEmbed()
         .setTitle('Calculando el ping...');
 
+        let serverstate:Response;
+        var gaveErr:boolean;
+        var givenErr:any;
+        try
+        {
+            serverstate = await fetch(`${url}`);
+            gaveErr = false;
+        }
+        catch(error)
+        {
+            gaveErr = true;
+            givenErr = error;
+        }
+
         message.channel.send({embeds:[calcping]}).then(resultMessage => {
             const msgpingsomething = resultMessage.createdTimestamp - message.createdTimestamp;
 
@@ -47,8 +61,18 @@ client.on('messageCreate', async(message) => {
             .addFields
             (
                 { name: 'Latencia del bot ', value: `${msgpingsomething}ms`, inline: true},
-                { name: 'Ping del bot ', value: `${client.ws.ping}ms`, inline: true}
-            ).setColor('#008000');
+                { name: 'Ping del bot ', value: `${client.ws.ping}ms`, inline: true},
+            ).setColor('GREEN');
+
+            if(gaveErr == false)
+            {
+                pingresult.addField('Estado del servidor ', `${serverstate.statusText}/${serverstate.status}`, true)
+            }
+            else
+            {
+                pingresult.addField('No se ha podido contactar con el servidor', `${givenErr}`, false);
+                pingresult.setColor('ORANGE');
+            }
 
             resultMessage.edit({embeds: [pingresult]});
         });
@@ -79,6 +103,11 @@ client.on('messageCreate', async(message) => {
         {
             Logger(excp, "ERROR");
         }
+    }
+    if(args[0] === "exit")
+    {
+        client.destroy();
+        process.exit();
     }
 });
 
