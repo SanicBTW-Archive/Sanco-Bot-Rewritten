@@ -28,31 +28,6 @@ export async function InitConsoleCommands(){
             }
         }
 
-        if(args[0] === "execute")
-        {
-            if(args[1] === "")
-            {
-                Logger("functions menu");
-                for(var i in availableFunc)
-                {
-                    Logger(availableFunc[i]);
-                }
-            }
-            else
-            {
-                var searchIndex = availableFunc.indexOf(args[1]);
-                if(searchIndex == -1)
-                {
-                    Logger("error", "ERROR");
-                }
-                if(args[1] == availableFunc[searchIndex])
-                {
-                    var the = require(pathToFunc[searchIndex]);
-                    the.exec();
-                }
-            }
-        }
-
         rl.prompt();
     }).on('close', () => {
         client.destroy();

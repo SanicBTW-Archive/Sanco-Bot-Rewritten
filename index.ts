@@ -14,8 +14,9 @@ import {InitConsoleCommands} from './src/terminal/TermHandler';
 import {prefix, presName} from './src/data/config/DConf.json';
 import {requestNote, startServer, url, urlReq, started} from './src/server/server';
 import fetch, {Response} from 'node-fetch';
+import { startUpload } from './src/server/UploadHandler';
 
-//startServer();
+startServer();
 
 client.on('ready', async () => {
     await InitFunctions().then(() => {
@@ -44,7 +45,7 @@ client.on('messageCreate', async(message) => {
         var givenErr:any;
         try
         {
-            serverstate = await fetch(`${url}`);
+            serverstate = await fetch(`${url}/status`);
             gaveErr = false;
         }
         catch(error)
@@ -84,7 +85,26 @@ client.on('messageCreate', async(message) => {
     }
     if(args[0] === "submit")
     {
-        //heavily based off some stack overflow question: https://stackoverflow.com/questions/67652628/reading-file-attachments-ex-txt-file-discord-js
+        const fileCheck = message.attachments.first()?.url;
+        if(!fileCheck)
+        {
+            message.reply("Adjunta un archivo para usar este comando!");
+        }
+        else 
+        {
+            var details = 
+            {
+                "author": message.author.username,
+                "filename": message.attachments.first()?.name?.replace(".txt", ""),  //only supports .txt, because thats the meaning of it lol
+                "filename-alias": "will be set in the handler, if this shows up, i fucked up, too lazy to format it here lol",
+                "creation-date": message.createdAt.toDateString(),
+                "request-url": "will be set in the handler, if this shows up, i fucked up, too lazy to format it here lol",
+                "file": message.attachments.first()?.url,
+            }
+            Logger("Pushing details array", "DEBUG")
+            startUpload(details);    
+        }
+        /*
         const file = message.attachments.first()?.url;
         if(!file) return Logger("no attached file found", "WARNING");
         try
@@ -102,7 +122,7 @@ client.on('messageCreate', async(message) => {
         catch (excp)
         {
             Logger(excp, "ERROR");
-        }
+        }*/
     }
     if(args[0] === "exit")
     {

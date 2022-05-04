@@ -14,8 +14,8 @@ StartHandler(); //Why would i do this :clown:
 
 app.use(router);
 
-router.get('/', (req, res)=>{
-    res.send("API Ver: 9")
+router.get('/status', (req, res)=>{
+    res.send("API Ver: 10")
 })
 
 export async function startServer(){
@@ -32,7 +32,7 @@ export async function requestNote(toReq:string, password?:string):Promise<Discor
     if(toReq == null)
     {
         var notesxd:string[];
-        const webapiv = await fetch(`${url}/`);
+        const webapiv = await fetch(`${url}/status`);
         if(useFile)
         {
             notesxd = await coolTextFile(noteList);
