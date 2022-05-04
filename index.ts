@@ -98,30 +98,11 @@ client.on('messageCreate', async(message) => {
                 "filename": message.attachments.first()?.name?.replace(".txt", ""),  //only supports .txt, because thats the meaning of it lol
                 "filename-alias": "will be set in the handler, if this shows up, i fucked up, too lazy to format it here lol",
                 "creation-date": message.createdAt.toDateString(),
-                "request-url": "will be set in the handler, if this shows up, i fucked up, too lazy to format it here lol",
-                "file": message.attachments.first()?.url,
+                "request-url": "will be set in the handler, if this shows up, i fucked up, too lazy to format it here lol"
             }
-            startUpload(details);    
+            await startUpload(details, message.attachments.first()!.url);    
+            message.reply("Hecho");
         }
-        /*
-        const file = message.attachments.first()?.url;
-        if(!file) return Logger("no attached file found", "WARNING");
-        try
-        {
-            message.reply("Leyendo el archivo");
-            const resp = await fetch(file);
-            if(!resp.ok){
-                message.reply(resp.statusText);
-            }
-            const textFile = await resp.text();
-            if(textFile){
-                message.channel.send(`\`\`\`${textFile}\`\`\``);
-            }
-        }
-        catch (excp)
-        {
-            Logger(excp, "ERROR");
-        }*/
     }
     if(args[0] === "exit")
     {
