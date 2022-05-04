@@ -1,32 +1,49 @@
 //used to handle the upload command in index.js
 import path from 'path';
 import fs from 'fs';
-import { coolTextFile, scanDir } from '../Helper';
+import { coolTextFile, createDirectory, scanDir } from '../Helper';
 import config from '../data/config/DConf.json';
 import { Logger } from '../NewLogger';
 
-Logger("Upload Handler Called!", "DEBUG");
+//helps the save functions and stuff
+var helpArray:BackupStruct = 
+{
+    "backupFileDir": "",
+    "backupParentDir": "",
+    "backupFilePath": ""
+}
 
-//maybe get a given array with the details??
-//the filename alias should be replace with the following format: "*author*-*filename*" WITHOUT THE FILE EXTENSION
 export function startUpload(details:DetailsArrStruct)
 {
-    Logger("Start Upload Function Called!", "DEBUG");
-    console.table(details);
-    Logger("Reformatting the given array", "DEBUG");
+    var parentAuthorDir = path.join(__dirname, "user_uploaded", details.author);
+    var fileDir = path.join(parentAuthorDir, details.filename!);
+
     var easier:string = `${details.author}-${details.filename}`
-    Logger("Changing the file name alias", "DEBUG");
     details['filename-alias'] = easier;
-    Logger("Changing the request url", "DEBUG");
     details['request-url'] = easier;
-    Logger("Done reformatting, I guess", "DEBUG");
-    Logger("Given Array", "DEBUG");
-    console.table(details);
-    Logger("Done", "SUCCESS");
+
+    createDirectory(parentAuthorDir);
+
+    createDirectory(fileDir);
+
+    helpArray.backupParentDir = parentAuthorDir;
+    helpArray.backupFileDir = fileDir;
+    helpArray.backupFilePath = fileDir + "/data.json";
+    saveJSON(details);
+}
+
+function saveJSON(arrayToJSON:DetailsArrStruct) {
+    var theJSON = JSON.stringify(arrayToJSON, null, 4);
+    if(!fs.existsSync(helpArray.backupFileDir)){
+        createDirectory(helpArray.backupParentDir);
+        createDirectory(helpArray.backupFileDir);
+    }
+    fs.writeFileSync(helpArray.backupFilePath, theJSON);
+    Logger("Data JSON saved", "SUCCESS");
 }
 
 //will save the file in the preset folder which is in "user_uploaded" and the user folder which sent the note
-export function saveFile(file:String)
+function saveFile(file:String)
 {
     
 }
@@ -39,4 +56,11 @@ type DetailsArrStruct =
     "creation-date": string,
     "request-url": string,
     "file": string | undefined,
+}
+
+type BackupStruct = 
+{
+    "backupFileDir": string,
+    "backupParentDir": string,
+    "backupFilePath": string
 }

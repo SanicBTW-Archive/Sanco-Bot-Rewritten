@@ -101,7 +101,6 @@ client.on('messageCreate', async(message) => {
                 "request-url": "will be set in the handler, if this shows up, i fucked up, too lazy to format it here lol",
                 "file": message.attachments.first()?.url,
             }
-            Logger("Pushing details array", "DEBUG")
             startUpload(details);    
         }
         /*

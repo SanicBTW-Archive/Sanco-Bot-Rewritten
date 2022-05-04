@@ -40,3 +40,12 @@ export async function scanDirWFilt(dir:string, filt:string):Promise<string[]>
     }
     return returner;
 }
+
+//WHY WHY WHY WHY WHY
+export async function createDirectory(newDirectory:string) {
+    if(!fs.existsSync(newDirectory)){
+        fs.mkdir(newDirectory, (err) => {
+            Logger(err, "ERROR");
+        })
+    }
+}
