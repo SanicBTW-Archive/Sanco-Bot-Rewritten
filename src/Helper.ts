@@ -47,3 +47,26 @@ export async function createDirectory(newDirectory:string) {
         fs.mkdir(newDirectory, () => {});
     }
 }
+
+export async function scanDirTWOT(dir:string)
+{
+    var returner:Array<string> = [];
+    var scan = path.join(dir);
+    var first = await scanDir(scan);
+    var second:Array<string> = [];
+    for(var i in first)
+    {
+        var help = path.join(scan, first[i]);
+        if(fs.existsSync(help))
+        {
+            second = await scanDir(help);
+            for(var i in second)
+            {
+                var the = path.join(help, second[i]);
+                returner.push(the);
+            }
+        }
+        //returner.push(jaja[i]);
+    }
+    return returner;
+}

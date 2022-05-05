@@ -12,7 +12,7 @@ import {Logger} from './src/NewLogger';
 import {InitFunctions} from './src/terminal/ConfHandler';
 import {InitConsoleCommands} from './src/terminal/TermHandler';
 import {prefix, presName} from './src/data/config/DConf.json';
-import {requestNote, startServer, url, urlReq, started} from './src/server/server';
+import {requestNote, startServer, url, urlReq, started, requestUserNotes} from './src/server/server';
 import fetch, {Response} from 'node-fetch';
 import { startUpload } from './src/server/UploadHandler';
 
@@ -83,7 +83,7 @@ client.on('messageCreate', async(message) => {
         var respEmbed = await requestNote(args[1], args[2]);
         message.channel.send({embeds:[respEmbed]});
     }
-    if(args[0] === "submit")
+    if(args[0] === "upl")
     {
         const fileCheck = message.attachments.first()?.url;
         if(!fileCheck)
@@ -103,6 +103,11 @@ client.on('messageCreate', async(message) => {
             await startUpload(details, message.attachments.first()!.url);    
             message.reply("Hecho");
         }
+    }
+    if(args[0] === "req-user")
+    {
+        var respEmbed = await requestUserNotes(args[1]);
+        message.channel.send({embeds:[respEmbed]});
     }
     if(args[0] === "exit")
     {

@@ -7,10 +7,12 @@ export var url = "http://localhost:5555";
 export var urlReq = url + '/';
 import Discord from 'discord.js';
 import fetch, {Response} from 'node-fetch';
-import { coolTextFile, scanDir } from '../Helper';
+import { coolTextFile, scanDir, scanDirTWOT } from '../Helper';
+import { mainFolder, StartUserHandler, userNoteAlias, userNoteCreationDate, userNoteName, userNoteRequest } from './UploadHandler';
 export var started:boolean = false;
 
 StartHandler(); //Why would i do this :clown:
+StartUserHandler();
 
 app.use(router);
 
@@ -43,7 +45,7 @@ export async function requestNote(toReq:string, password?:string):Promise<Discor
         }
         const helpMenu = new Discord.MessageEmbed()
         .setTitle('Notas')
-        .setDescription((await webapiv.text()))
+        .setDescription(`${(await webapiv.text())}\nNotas añadidas por el host`)
         .setColor('LIGHT_GREY')
         for(var i in notesxd)
         {
@@ -79,6 +81,45 @@ export async function requestNote(toReq:string, password?:string):Promise<Discor
             return wrongPass;
         }
         resp = await fetch(`${url}${noteRequest[newLesgo]}`);
+        responseEmbed = new Discord.MessageEmbed()
+        .setTitle(noteName[newLesgo])
+        .setDescription((await resp.text()))
+        .setColor('BLURPLE')
+    }
+    return responseEmbed;
+}
+
+export async function requestUserNotes(toReq:string):Promise<Discord.MessageEmbed>
+{
+    let responseEmbed = new Discord.MessageEmbed()
+    let resp:Response;
+    if(toReq == null)
+    {
+        var notesxd:string[];
+        const webapiv = await fetch(`${url}/status`);
+        notesxd = await scanDirTWOT(mainFolder);
+        const helpMenu = new Discord.MessageEmbed()
+        .setTitle('Notas de los usuarios')
+        .setDescription(`${(await webapiv.text())}\nNotas añadidas por los usuarios`)
+        .setColor('LIGHT_GREY')
+        for(var i in notesxd)
+        {
+            helpMenu.addField(`Nombre de la nota: ${userNoteName[i]}\nCreada el: ${userNoteCreationDate[i]}\n`, `Alias para poder mostrar la nota: ${userNoteAlias[i]}`)
+        }
+        return helpMenu;
+    }
+    else
+    {
+        var newLesgo = userNoteAlias.indexOf(toReq);
+        if(newLesgo == -1)
+        {
+            const errorEmbed = new Discord.MessageEmbed()
+            .setTitle('Oops - 404') //hard code it lol
+            .setDescription('No pudimos encontrar eso, prueba otra vez')
+            .setColor('RED');
+            return errorEmbed;
+        }
+        resp = await fetch(`${url}${userNoteRequest[newLesgo]}`);
         responseEmbed = new Discord.MessageEmbed()
         .setTitle(noteName[newLesgo])
         .setDescription((await resp.text()))
