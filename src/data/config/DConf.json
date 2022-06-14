@@ -1,12 +1,7 @@
 {
     "prefix": "s?",
-    "presName": "v1 - Beta 30",
+    "presName": "v1.0.0 Rewrite",
     "options":
     {
-        "1": 
-        {
-            "optionName": "Use data list file",
-            "optionState": true
-        }
     }
 }

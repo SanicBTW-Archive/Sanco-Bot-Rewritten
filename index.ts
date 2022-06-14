@@ -12,11 +12,7 @@ import {Logger} from './src/NewLogger';
 import {InitFunctions} from './src/terminal/ConfHandler';
 import {InitConsoleCommands} from './src/terminal/TermHandler';
 import {prefix, presName} from './src/data/config/DConf.json';
-import {requestNote, startServer, url, urlReq, started, requestUserNotes} from './src/server/server';
-import fetch, {Response} from 'node-fetch';
-import { startUpload } from './src/server/UploadHandler';
-
-startServer();
+import {eventHandler} from './src/EventHandler';
 
 client.on('ready', async () => {
     await InitFunctions().then(() => {
@@ -31,6 +27,8 @@ client.on('ready', async () => {
     });
 });
 
+new eventHandler(client);
+
 client.on('messageCreate', async(message) => {
     if(!message.content.startsWith(prefix) || message.author.bot) return;
     let args = message.content.substring(prefix.length).split(" ");
@@ -39,20 +37,6 @@ client.on('messageCreate', async(message) => {
     {
         const calcping = new Discord.MessageEmbed()
         .setTitle('Calculando el ping...');
-
-        let serverstate:Response;
-        var gaveErr:boolean;
-        var givenErr:any;
-        try
-        {
-            serverstate = await fetch(`${url}/status`);
-            gaveErr = false;
-        }
-        catch(error)
-        {
-            gaveErr = true;
-            givenErr = error;
-        }
 
         message.channel.send({embeds:[calcping]}).then(resultMessage => {
             const msgpingsomething = resultMessage.createdTimestamp - message.createdTimestamp;
@@ -65,50 +49,10 @@ client.on('messageCreate', async(message) => {
                 { name: 'Ping del bot ', value: `${client.ws.ping}ms`, inline: true},
             ).setColor('GREEN');
 
-            if(gaveErr == false)
-            {
-                pingresult.addField('Estado del servidor ', `${serverstate.statusText}/${serverstate.status}`, true)
-            }
-            else
-            {
-                pingresult.addField('No se ha podido contactar con el servidor', `${givenErr}`, false);
-                pingresult.setColor('ORANGE');
-            }
-
             resultMessage.edit({embeds: [pingresult]});
         });
     }
-    if(args[0] === "req")
-    {
-        var respEmbed = await requestNote(args[1], args[2]);
-        message.channel.send({embeds:[respEmbed]});
-    }
-    if(args[0] === "upl")
-    {
-        const fileCheck = message.attachments.first()?.url;
-        if(!fileCheck)
-        {
-            message.reply("Adjunta un archivo para usar este comando!");
-        }
-        else 
-        {
-            var details = 
-            {
-                "author": message.author.username,
-                "filename": message.attachments.first()?.name?.replace(".txt", ""),  //only supports .txt, because thats the meaning of it lol
-                "filename-alias": "will be set in the handler, if this shows up, i fucked up, too lazy to format it here lol",
-                "creation-date": message.createdAt.toDateString(),
-                "request-url": "will be set in the handler, if this shows up, i fucked up, too lazy to format it here lol"
-            }
-            await startUpload(details, message.attachments.first()!.url);    
-            message.reply("Hecho");
-        }
-    }
-    if(args[0] === "req-user")
-    {
-        var respEmbed = await requestUserNotes(args[1]);
-        message.channel.send({embeds:[respEmbed]});
-    }
+
     if(args[0] === "exit")
     {
         client.destroy();
