@@ -6,10 +6,16 @@ import { Logger } from './NewLogger';
 var configVals:Array<string> = [];
 var configNames:Array<string> = [];
 
+var configuration:[{
+    optName: string, 
+    optState: string
+}];
+
 var finishedSettingUp:boolean = false;
 
 export async function setupOptionFile(path:string)
 {
+    configuration = [{optName: "null", optState: "null"}]
     var daList:Array<string> = [];
     if(path.endsWith(".optf"))
     {
@@ -17,9 +23,13 @@ export async function setupOptionFile(path:string)
         for(var i in daList)
         {
             var options = daList[i].split(":");
-            configNames.push(options[0]);
-            configVals.push(options[1]);
-
+            configuration.push({optName: options[0], optState: options[1]});
+            configuration[i].optName = options[0];
+            configuration[i].optState = options[1];
+            //the last item is repeated for some reason
+            configuration.at(-1)!.optName = "null";
+            configuration.at(-1)!.optState = "null";
+            
             finishedSettingUp = true;
         }
     }
@@ -35,7 +45,7 @@ export function getOptionField(index:number):string
     var daValue:string = "";
     if(finishedSettingUp == true)
     {
-        daValue = configVals[index];
+        daValue = configuration[index].optState;
     }
     else
     {

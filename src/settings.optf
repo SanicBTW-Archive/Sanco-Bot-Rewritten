@@ -1,4 +1,4 @@
 Prefix:s?
 Presence Name:v1.0.0 Rewrite
-Clear console on startup:true
+Clear console on startup:false
 Terminal title:Sanic Bot
