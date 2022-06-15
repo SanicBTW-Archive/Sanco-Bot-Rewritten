@@ -1,10 +1,10 @@
 import {Logger} from '../../NewLogger';
-import config from '../../data/config/TConf.json';
+import {configuration} from '../../OptFHandler';
 
 module.exports = {
     alias: "change-title",
     exec: function(){
-        var OptVal = config.options[2].optionValue;
+        var OptVal = configuration[0 + 3].optState;
         if(OptVal != null) process.title = OptVal;
         else Logger("The option value is null, the title didn't change", "ERROR");
     }

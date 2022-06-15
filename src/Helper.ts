@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import { Logger } from './NewLogger';
 
 //highly inspired in fnf coolutil.hx method
 export async function coolTextFile(path:string):Promise<string[]>

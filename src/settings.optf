@@ -1,2 +1,4 @@
 Discord|Prefix:s?
 Discord|Presence Name:v1.0.0 Rewrite
+Terminal:Clear console on startup:true
+Terminal:Terminal title:Sanic Bot

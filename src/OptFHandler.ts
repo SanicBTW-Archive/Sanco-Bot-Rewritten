@@ -8,19 +8,15 @@ export var configuration:[{
     optState: string
 }];
 
-export var availableIndexes:Array<number> = [0];
-
 export async function setupOptionFile(path:string,)
 {
     configuration = [{optType: "null", optName: "null", optState: "null"}]
     var daList:Array<string> = [];
-    var index = 0;
     if(path.endsWith(".optf"))
     {
         daList = fs.readFileSync(path, 'utf-8').trim().split('\n');
         for(var i in daList)
         {
-            index ++;
             var options = daList[i].split(":");
             var type = daList[i].split("|");
             configuration.push({optType: type[0], optName: options[0].replace(type[0] + "|", ""), optState: options[1]});
@@ -31,7 +27,6 @@ export async function setupOptionFile(path:string,)
             configuration.at(-1)!.optType = "null";
             configuration.at(-1)!.optName = "null";
             configuration.at(-1)!.optState = "null";
-            availableIndexes.push(index)
         }
     }
     else
