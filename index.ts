@@ -11,15 +11,30 @@ export var rl = readline.createInterface({
 import {Logger} from './src/NewLogger';
 import {InitFunctions} from './src/terminal/ConfHandler';
 import {InitConsoleCommands} from './src/terminal/TermHandler';
-import {prefix, presName} from './src/data/config/DConf.json';
+//import {prefix, presName} from './src/data/config/DConf.json';
 import {eventHandler} from './src/EventHandler';
+import {setupOptionFile, configuration, availableIndexes} from './src/OptFHandler';
+
+//setups config stuff
+setupOptionFile('./src/settings.optf');
+var prefix = configuration[0].optState;
+var presenceName = configuration[0 + 1].optState; //kind of easy bypass i guess
+
+/*
+availableIndexes.forEach(idx => {
+    switch(idx)
+    {
+        case 1:
+            break;
+    }
+});*/
 
 client.on('ready', async () => {
     await InitFunctions().then(() => {
         Logger(`Logged in as ${client.user!.tag}`, "INFO");
         client.user!.setPresence({
             activities:[{
-                name: presName,
+                name: "hola",
                 type: 'PLAYING'
             }], status: "dnd"
         })

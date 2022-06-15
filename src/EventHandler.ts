@@ -5,6 +5,6 @@ export class eventHandler
 {
     constructor(client:Discord.Client)
     {
-        Logger("received client!", "INFO");
+        Logger("received client!", "DEBUG");
     }
 }
