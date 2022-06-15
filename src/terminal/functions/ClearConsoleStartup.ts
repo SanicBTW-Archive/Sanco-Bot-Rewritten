@@ -1,10 +1,10 @@
 import { Logger } from '../../NewLogger';
-import {configuration} from '../../OptFHandler';
+import {getOptionField} from '../../OptFHandler';
 
 module.exports = {
     alias: "clear-console",
     exec: function(){
-        var OptState = configuration[0 + 2].optState;
+        var OptState = getOptionField(2);
         switch(OptState)
         {
             case "true":
