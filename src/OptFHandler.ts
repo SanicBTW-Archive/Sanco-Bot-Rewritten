@@ -3,15 +3,13 @@
 import fs from 'fs';
 import { Logger } from './NewLogger';
 
-var configVals:Array<string> = [];
-var configNames:Array<string> = [];
-
-var configuration:[{
+export var configuration:[{
     optName: string, 
     optState: string
 }];
 
 var finishedSettingUp:boolean = false;
+var isComment:boolean = false;
 
 export async function setupOptionFile(path:string)
 {
@@ -22,14 +20,25 @@ export async function setupOptionFile(path:string)
         daList = fs.readFileSync(path, 'utf-8').trim().split('\n');
         for(var i in daList)
         {
+            if(daList[i].startsWith("#"))
+            {
+                /* debug stuff
+                Logger("Detected comment","DEBUG");
+                var idxcmnt:any = i;
+                Logger("Comment Index " + idxcmnt, "DEBUG")
+                Logger(daList[idxcmnt], "DEBUG");*/
+                isComment = true;
+            }
             var options = daList[i].split(":");
-            configuration.push({optName: options[0], optState: options[1]});
-            configuration[i].optName = options[0];
-            configuration[i].optState = options[1];
-            //the last item is repeated for some reason
-            configuration.at(-1)!.optName = "null";
-            configuration.at(-1)!.optState = "null";
-            
+            if(isComment == false){
+                configuration.push({optName: options[0], optState: options[1]});
+                configuration[i].optName = options[0];
+                configuration[i].optState = options[1];
+                //the last item is repeated for some reason
+                configuration.at(-1)!.optName = "null";
+                configuration.at(-1)!.optState = "null";
+            }
+
             finishedSettingUp = true;
         }
     }
