@@ -14,7 +14,7 @@ type LogLevelsStrings = keyof typeof LogLevels;
 
 export function Logger(message:any, key?:LogLevelsStrings)
 {
-    const jaja = `[ ${key} ]`;
+    const jaja = `[ ${key != null ? key : "INFO"} ]`;
 
     var styleTable = 
     {
@@ -27,8 +27,8 @@ export function Logger(message:any, key?:LogLevelsStrings)
 
     switch(key)
     {
-        case "INFO":
-            return console.log(styleTable[key]); 
+        default:
+            return console.log(styleTable["INFO"]); 
         case "WARNING":
             return console.log(styleTable[key]);
         case "ERROR":

@@ -4,7 +4,6 @@ import * as readline from 'readline';
 import Discord from 'discord.js';
 import { Logger } from '../NewLogger';
 import {rl, client} from '../../index';
-import { availableFunc, pathToFunc } from './ConfHandler';
 
 export async function InitConsoleCommands(){
     rl.prompt();

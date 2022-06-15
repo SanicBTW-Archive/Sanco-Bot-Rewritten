@@ -2,7 +2,7 @@
   "name": "sanco-bot-rewritten",
   "version": "1.0.0",
   "description": "my dumb bot rewritten",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "register": "ts-node ./src/TokenReg.ts"
   },

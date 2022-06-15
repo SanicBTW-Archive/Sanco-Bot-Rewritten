@@ -30,7 +30,8 @@ export async function setupOptionFile(path:string)
                 isComment = true;
             }
             var options = daList[i].split(":");
-            if(isComment == false){
+            if(isComment == false)
+            {
                 configuration.push({optName: options[0], optState: options[1]});
                 configuration[i].optName = options[0];
                 configuration[i].optState = options[1];
