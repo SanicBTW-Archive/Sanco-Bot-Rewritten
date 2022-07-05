@@ -2,7 +2,6 @@
 //literally stolen from the original sanic bot typescript branch
 import * as readline from 'readline';
 import Discord from 'discord.js';
-import { Logger } from '../NewLogger';
 import {rl, client} from '../../index';
 
 export async function InitConsoleCommands(){
@@ -17,8 +16,8 @@ export async function InitConsoleCommands(){
         rl.prompt();
     }).on('close', () => {
         client.destroy();
-        Logger("Client destroyed", 'WARNING');
-        Logger("Terminating process", 'WARNING');
+        console.log("Client destroyed");
+        console.log("Terminating process");
         process.exit();
     })
 }

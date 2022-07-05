@@ -1,4 +1,3 @@
-import { Logger } from '../../NewLogger';
 import { ConfigHelper } from '../../ConfigHandler';
 
 module.exports = {
@@ -9,7 +8,6 @@ module.exports = {
         {
             case "true":
                 console.clear();
-                Logger("Done clearing", "SUCCESS");
         }
     }
 }

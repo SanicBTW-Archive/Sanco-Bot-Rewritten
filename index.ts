@@ -12,7 +12,6 @@ export var rl = readline.createInterface({
     output: process.stdout,
     prompt: "> "
 });
-import {Logger} from './src/NewLogger';
 import {InitFunctions} from './src/terminal/ConfHandler';
 import {InitConsoleCommands} from './src/terminal/TermHandler';
 import {eventHandler} from './src/EventHandler';
@@ -20,7 +19,7 @@ var prefix = configHelper.getValue("prefix");
 
 client.on('ready', async () => {
     await InitFunctions().then(() => {
-        Logger(`Logged in as ${client.user!.tag}`, "INFO");
+        console.log(`Logged in as ${client.user!.tag}`);
         client.user!.setPresence({
             activities:[{
                 name: configHelper.getValue("presenceName"),

@@ -1,8 +1,8 @@
 import Discord from 'discord.js';
-import { Logger } from './NewLogger';
 import { rl } from '..';
 import path from 'path';
 import fs from 'fs';
+import { createDirectory } from './Helper';
 
 var logsDir:string = path.join('.', 'logs');
 var authorDir:string = "";
@@ -36,8 +36,9 @@ export class eventHandler
 
             authorDir = path.join(logsDir, details.authorID) //we use the id to create the folder to avoid emojis or any special characters
             messagesDir = path.join(authorDir, "messages");
-            fs.mkdirSync(authorDir);
-            fs.mkdirSync(messagesDir);
+            createDirectory(authorDir);
+            createDirectory(messagesDir);
+
 
             rl.prompt();
         });

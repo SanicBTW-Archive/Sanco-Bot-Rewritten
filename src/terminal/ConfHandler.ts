@@ -1,5 +1,4 @@
 //config handler
-import { Logger } from '../NewLogger';
 import path from 'path';
 import { scanDirWFilt } from '../Helper';
 

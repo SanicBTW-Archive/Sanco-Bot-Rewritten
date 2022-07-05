@@ -1,4 +1,3 @@
-import {Logger} from '../../NewLogger';
 import { ConfigHelper } from '../../ConfigHandler';
 
 module.exports = {
@@ -6,6 +5,6 @@ module.exports = {
     exec: function(){
         var OptVal = new ConfigHelper().getValue("terminal title");
         if(OptVal != null) process.title = OptVal;
-        else Logger("The option value is null, the title didn't change", "ERROR");
+        else throw console.log("The option value is null, the title didn't change");
     }
 }
