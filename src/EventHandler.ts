@@ -59,12 +59,14 @@ export class EventHandler
             messageDetails.guild = msg.guild?.name;
             messageDetails.channelID = msg.channelId;
 
+            setupVars(msg);
+
             if(configHelper.getValue("save message logs"))
             {
                 setupFolder(Folders.messages);
 
                 var stringified = JSON.stringify(messageDetails, null, 4); 
-                var fixedDir = path.join(messagesDir, msg.createdAt.toUTCString() + fileExt);
+                var fixedDir = path.join(messagesDir, configHelper.getValue("saveFileName"));
     
                 if(configHelper.getValue("messages dir done"))
                 {
@@ -88,12 +90,14 @@ export class EventHandler
             editedMessageDetails.guild = newMsg.guild?.name;
             editedMessageDetails.channelID = newMsg.channelId;
 
+            setupVars(newMsg);
+
             if(configHelper.getValue("save edited messages"))
             {
                 setupFolder(Folders.edited_messages);
 
                 var stringified = JSON.stringify(editedMessageDetails, null, 4);
-                var fixedDir = path.join(editedMessagesDir, newMsg.createdAt.toUTCString() + fileExt);
+                var fixedDir = path.join(editedMessagesDir, configHelper.getValue("saveFileName"));
                 
                 if(configHelper.getValue("edited messages dir done"))
                 {
@@ -114,12 +118,14 @@ export class EventHandler
             deletedMessageDetails.guild = msg.guild?.name;
             deletedMessageDetails.channelID = msg.channelId;
 
+            setupVars(msg);
+
             if(configHelper.getValue("save deleted messages"))
             {
                 setupFolder(Folders.deleted_messages);
 
                 var stringified = JSON.stringify(deletedMessageDetails, null, 4);
-                var fixedDir = path.join(deletedMessagesDir, msg.createdAt.toUTCString() + fileExt);
+                var fixedDir = path.join(deletedMessagesDir, configHelper.getValue("saveFileName"));
 
                 if(configHelper.getValue("deleted messages dir done"))
                 {
@@ -157,6 +163,13 @@ function setupFolder(type:Folders)
             configHelper.setNewValue("deleted messages dir done", true);
             break;
     }
+}
+
+function setupVars(msg:any)
+{
+    configHelper.setNewValue("saveDateVar", msg.createdAt.getDate() + "-" + msg.createdAt.getMonth() + "-" + msg.createdAt.getFullYear());
+    configHelper.setNewValue("saveTimeVar", msg.createdAt.getHours() + ":" + msg.createdAt.getMinutes() + ":" + msg.createdAt.getSeconds() + "." + msg.createdAt.getMilliseconds());
+    configHelper.setNewValue("saveFileName", configHelper.getValue("saveDateVar") + "_" + configHelper.getValue("saveTimeVar") + fileExt);
 }
 
 type MessageDetails = 

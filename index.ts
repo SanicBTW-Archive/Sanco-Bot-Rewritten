@@ -56,6 +56,13 @@ client.on('messageCreate', async(message) => {
         });
     }
 
+    //temp command lol
+    if(args[0] === "pfp")
+    {
+        var pfp = message.author.avatarURL({size: 4096, format: 'png'});
+        message.channel.send(pfp!);
+    }
+
     if(args[0] === "shutdown")
     {
         client.destroy();
