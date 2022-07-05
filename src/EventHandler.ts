@@ -5,18 +5,14 @@ import fs from 'fs';
 import { writeFile } from './Helper';
 import { ConfigHelper } from './ConfigHandler';
 
+var configHelper = new ConfigHelper();
+
 var logsDir:string = path.join('.', 'logs');
 //migrate to configHelper next commit
-var authorDir:string = "";
 var messagesDir:string = "";
 var editedMessagesDir:string = "";
 var deletedMessagesDir:string = "";
 var fileExt:string = ".json";
-var configHelper = new ConfigHelper();
-
-configHelper.setNewValue("messages dir done", false);
-configHelper.setNewValue("edited messages dir done", false);
-configHelper.setNewValue("deleted messages dir done", false);
 
 var messageDetails:MessageDetails = 
 {
@@ -140,23 +136,23 @@ function setupFolder(type:Folders)
     switch(type)
     {
         case Folders.messages:
-            authorDir = path.join(logsDir, messageDetails.authorID);
-            messagesDir = path.join(authorDir, "messages");
-            if(!fs.existsSync(authorDir)){ fs.mkdirSync(authorDir); }
+            configHelper.setNewValue("authorDir", path.join(logsDir, messageDetails.authorID));
+            messagesDir = path.join(configHelper.getValue("authorDir"), "messages");
+            if(!fs.existsSync(configHelper.getValue("authorDir"))){ fs.mkdirSync(configHelper.getValue("authorDir")); }
             if(!fs.existsSync(messagesDir)) { fs.mkdirSync(messagesDir); }
             configHelper.setNewValue("messages dir done", true);
             break;
         case Folders.edited_messages:
-            authorDir = path.join(logsDir, editedMessageDetails.authorID);
-            editedMessagesDir = path.join(authorDir, "edited_messages");
-            if(!fs.existsSync(authorDir)){ fs.mkdirSync(authorDir); }
+            configHelper.setNewValue("authorDir", path.join(logsDir, editedMessageDetails.authorID));
+            editedMessagesDir = path.join(configHelper.getValue("authorDir"), "edited_messages");
+            if(!fs.existsSync(configHelper.getValue("authorDir"))){ fs.mkdirSync(configHelper.getValue("authorDir")); }
             if(!fs.existsSync(editedMessagesDir)){ fs.mkdirSync(editedMessagesDir); }
             configHelper.setNewValue("edited messages dir done", true);
             break;
         case Folders.deleted_messages:
-            authorDir = path.join(logsDir, deletedMessageDetails.authorID);
-            deletedMessagesDir = path.join(authorDir, "deleted_messages");
-            if(!fs.existsSync(authorDir)){ fs.mkdirSync(authorDir); }
+            configHelper.setNewValue("authorDir", path.join(logsDir, deletedMessageDetails.authorID));
+            deletedMessagesDir = path.join(configHelper.getValue("authorDir"), "deleted_messages");
+            if(!fs.existsSync(configHelper.getValue("authorDir"))){ fs.mkdirSync(configHelper.getValue("authorDir")); }
             if(!fs.existsSync(deletedMessagesDir)){ fs.mkdirSync(deletedMessagesDir); }
             configHelper.setNewValue("deleted messages dir done", true);
             break;

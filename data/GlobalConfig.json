@@ -14,8 +14,8 @@
         },
         "Filesystem configuration":
         {
-            "save message logs": false,
-            "save edited messages": false,
+            "save message logs": true,
+            "save edited messages": true,
             "save deleted messages": true
         }
     }

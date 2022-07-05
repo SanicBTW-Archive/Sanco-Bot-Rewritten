@@ -1,9 +1,8 @@
 {
-    "version": 1,
+    "version": 1.2,
     "author": "sanco",
     "authorID": "783050276105093120",
-    "oldContent": "hola que tal",
-    "newContent": "soy colosal",
+    "content": "hola jij",
     "guild": "Clase de minusvalidos",
     "channelID": "914895516070969365"
 }
