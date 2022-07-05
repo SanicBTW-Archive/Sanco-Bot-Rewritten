@@ -24,11 +24,12 @@ export class EventHandler
 
             var details:MessageDetails = 
             {
-                "version": 1.2,
+                "version": 1.3,
                 "author": "author name",
                 "authorID": "author id",
                 "content": "message content",
                 "guild": "guild",
+                "channelName": "channel name",
                 "channelID": "channel id"
             }
 
@@ -36,6 +37,7 @@ export class EventHandler
             details.authorID = msg.author.id;
             details.content = msg.content;
             details.guild = msg.guild?.name;
+            details.channelName = msg.guild!.channels.cache.get(msg.channelId)!.name;
             details.channelID = msg.channelId;
 
             setupVars(msg);
@@ -63,12 +65,13 @@ export class EventHandler
 
             var details:EditedMessageDetails = 
             {
-                "version": 1,
+                "version": 1.1,
                 "author": "author name",
                 "authorID": "author id",
                 "oldContent": "old message content",
                 "newContent": "new message content",
                 "guild": "guild",
+                "channelName": "channel name",
                 "channelID": "channel id",
             }
 
@@ -78,6 +81,7 @@ export class EventHandler
             details.oldContent = oldMsg.content;
             details.newContent = newMsg.content;
             details.guild = newMsg.guild?.name;
+            details.channelName = newMsg.guild!.channels.cache.get(newMsg.channelId)!.name;
             details.channelID = newMsg.channelId;
 
             setupVars(newMsg);
@@ -104,11 +108,12 @@ export class EventHandler
 
             var details:DeletedMessageDetails = 
             {
-                "version": 1,
+                "version": 1.1,
                 "author": "author name",
                 "authorID": "author id",
                 "deletedContent": "deleted message",
                 "guild": "guild",
+                "channelName": "channel name",
                 "channelID": "channel id"
             }
 
@@ -116,6 +121,7 @@ export class EventHandler
             details.authorID = msg.author!.id;
             details.deletedContent = msg.content;
             details.guild = msg.guild?.name;
+            details.channelName = msg.guild!.channels.cache.get(msg.channelId)!.name;
             details.channelID = msg.channelId;
 
             setupVars(msg);
@@ -179,7 +185,8 @@ type MessageDetails =
     authorID: string,
     content: string | never,
     guild: string | undefined,
-    channelID: string
+    channelName: string,
+    channelID: string,
 }
 
 type EditedMessageDetails = 
@@ -190,6 +197,7 @@ type EditedMessageDetails =
     oldContent: string | null,
     newContent: string | null,
     guild: string | undefined,
+    channelName: string,
     channelID: string
 }
 
@@ -200,6 +208,7 @@ type DeletedMessageDetails =
     authorID: string,
     deletedContent: string | null,
     guild: string | undefined,
+    channelName: string,
     channelID: string
 }
 
