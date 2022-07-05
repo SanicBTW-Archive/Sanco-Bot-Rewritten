@@ -14,7 +14,7 @@
         },
         "Filesystem configuration":
         {
-            "save message logs": true
+            "save message logs": false
         }
     }
 }

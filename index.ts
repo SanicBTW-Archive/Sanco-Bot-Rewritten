@@ -12,7 +12,7 @@ export var rl = readline.createInterface({
     output: process.stdout,
     prompt: "> "
 });
-import {InitFunctions} from './src/terminal/ConfHandler';
+import {InitFunctions} from './src/terminal/FuncLoader';
 import {InitConsoleCommands} from './src/terminal/TermHandler';
 import {eventHandler} from './src/EventHandler';
 var prefix = configHelper.getValue("prefix");
