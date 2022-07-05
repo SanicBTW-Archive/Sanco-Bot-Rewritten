@@ -6,14 +6,17 @@ import { writeFile } from './Helper';
 import { ConfigHelper } from './ConfigHandler';
 
 var logsDir:string = path.join('.', 'logs');
+//migrate to configHelper next commit
 var authorDir:string = "";
 var messagesDir:string = "";
 var editedMessagesDir:string = "";
+var deletedMessagesDir:string = "";
 var fileExt:string = ".json";
 var configHelper = new ConfigHelper();
 
 configHelper.setNewValue("messages dir done", false);
 configHelper.setNewValue("edited messages dir done", false);
+configHelper.setNewValue("deleted messages dir done", false);
 
 var messageDetails:MessageDetails = 
 {
@@ -36,6 +39,16 @@ var editedMessageDetails:EditedMessageDetails =
     "channelID": "channel id",
 }
 
+var deletedMessageDetails:DeletedMessageDetails = 
+{
+    "version": 1,
+    "author": "author name",
+    "authorID": "author id",
+    "deletedContent": "deleted message",
+    "guild": "guild",
+    "channelID": "channel id"
+}
+
 export class EventHandler
 {
     constructor(client:Discord.Client)
@@ -52,14 +65,14 @@ export class EventHandler
 
             if(configHelper.getValue("save message logs"))
             {
-                setupMessagesFolder();
+                setupFolder(Folders.messages);
 
-                var stringifiedMessage = JSON.stringify(messageDetails, null, 4); 
+                var stringified = JSON.stringify(messageDetails, null, 4); 
                 var fixedDir = path.join(messagesDir, msg.createdAt.toUTCString() + fileExt);
     
                 if(configHelper.getValue("messages dir done"))
                 {
-                    writeFile(fixedDir, stringifiedMessage);
+                    writeFile(fixedDir, stringified);
                 }
             }
 
@@ -67,7 +80,8 @@ export class EventHandler
         });
 
         //this one might need a little bit of tweaking tbh
-        client.on('messageUpdate', (oldMsg, newMsg) => {
+        client.on('messageUpdate', (oldMsg, newMsg) => 
+        {
             if(newMsg.author?.bot) return;
 
             //the message is edited by the same person sooo it doesnt matter if oldMsg or newMsg is used
@@ -80,49 +94,83 @@ export class EventHandler
 
             if(configHelper.getValue("save edited messages"))
             {
-                setupEditedMessagesFolder();
+                setupFolder(Folders.edited_messages);
 
-                var stringifiedEditedMessage = JSON.stringify(editedMessageDetails, null, 4);
+                var stringified = JSON.stringify(editedMessageDetails, null, 4);
                 var fixedDir = path.join(editedMessagesDir, newMsg.createdAt.toUTCString() + fileExt);
                 
                 if(configHelper.getValue("edited messages dir done"))
                 {
-                    writeFile(fixedDir, stringifiedEditedMessage);
+                    writeFile(fixedDir, stringified);
                 }
             }
 
             rl.prompt();
         });
+
+        client.on('messageDelete', (msg) => 
+        {
+            if(msg.author?.bot) return;
+
+            deletedMessageDetails.author = msg.author!.username;
+            deletedMessageDetails.authorID = msg.author!.id;
+            deletedMessageDetails.deletedContent = msg.content;
+            deletedMessageDetails.guild = msg.guild?.name;
+            deletedMessageDetails.channelID = msg.channelId;
+
+            if(configHelper.getValue("save deleted messages"))
+            {
+                setupFolder(Folders.deleted_messages);
+
+                var stringified = JSON.stringify(deletedMessageDetails, null, 4);
+                var fixedDir = path.join(deletedMessagesDir, msg.createdAt.toUTCString() + fileExt);
+
+                if(configHelper.getValue("deleted messages dir done"))
+                {
+                    writeFile(fixedDir, stringified);
+                }
+            }
+        });
     }
 }
 
 //we use the id to create the folder to avoid emojis or any special characters
-function setupMessagesFolder()
+function setupFolder(type:Folders)
 {
-    authorDir = path.join(logsDir, messageDetails.authorID);
-    messagesDir = path.join(authorDir, "messages");
-    if(!fs.existsSync(authorDir)){ fs.mkdirSync(authorDir); }
-    if(!fs.existsSync(messagesDir)) { fs.mkdirSync(messagesDir); }
-    configHelper.setNewValue("messages dir done", true);
-}
-
-function setupEditedMessagesFolder()
-{
-    authorDir = path.join(logsDir, editedMessageDetails.authorID);
-    editedMessagesDir = path.join(authorDir, "edited_messages");
-    if(!fs.existsSync(authorDir)){ fs.mkdirSync(authorDir); }
-    if(!fs.existsSync(editedMessagesDir)){ fs.mkdirSync(editedMessagesDir); }
-    configHelper.setNewValue("edited messages dir done", true);
+    switch(type)
+    {
+        case Folders.messages:
+            authorDir = path.join(logsDir, messageDetails.authorID);
+            messagesDir = path.join(authorDir, "messages");
+            if(!fs.existsSync(authorDir)){ fs.mkdirSync(authorDir); }
+            if(!fs.existsSync(messagesDir)) { fs.mkdirSync(messagesDir); }
+            configHelper.setNewValue("messages dir done", true);
+            break;
+        case Folders.edited_messages:
+            authorDir = path.join(logsDir, editedMessageDetails.authorID);
+            editedMessagesDir = path.join(authorDir, "edited_messages");
+            if(!fs.existsSync(authorDir)){ fs.mkdirSync(authorDir); }
+            if(!fs.existsSync(editedMessagesDir)){ fs.mkdirSync(editedMessagesDir); }
+            configHelper.setNewValue("edited messages dir done", true);
+            break;
+        case Folders.deleted_messages:
+            authorDir = path.join(logsDir, deletedMessageDetails.authorID);
+            deletedMessagesDir = path.join(authorDir, "deleted_messages");
+            if(!fs.existsSync(authorDir)){ fs.mkdirSync(authorDir); }
+            if(!fs.existsSync(deletedMessagesDir)){ fs.mkdirSync(deletedMessagesDir); }
+            configHelper.setNewValue("deleted messages dir done", true);
+            break;
+    }
 }
 
 type MessageDetails = 
 {
     version: number,
-    author:string,
-    authorID:string,
-    content:string | never,
-    guild:string | undefined,
-    channelID:string
+    author: string,
+    authorID: string,
+    content: string | never,
+    guild: string | undefined,
+    channelID: string
 }
 
 type EditedMessageDetails = 
@@ -132,6 +180,23 @@ type EditedMessageDetails =
     authorID: string,
     oldContent: string | null,
     newContent: string | null,
-    guild:string | undefined,
-    channelID:string
+    guild: string | undefined,
+    channelID: string
+}
+
+type DeletedMessageDetails = 
+{
+    version: number,
+    author: string,
+    authorID: string,
+    deletedContent: string | null,
+    guild: string | undefined,
+    channelID: string
+}
+
+enum Folders
+{
+    messages,
+    edited_messages,
+    deleted_messages
 }
