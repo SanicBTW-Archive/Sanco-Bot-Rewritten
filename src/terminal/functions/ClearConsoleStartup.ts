@@ -1,10 +1,10 @@
 import { Logger } from '../../NewLogger';
-import {getOptionField} from '../../OptFHandler';
+import { ConfigHelper } from '../../ConfigHandler';
 
 module.exports = {
     alias: "clear-console",
     exec: function(){
-        var OptState = getOptionField(2);
+        var OptState = new ConfigHelper().getValue("clear console on startup");
         switch(OptState)
         {
             case "true":

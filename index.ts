@@ -1,14 +1,11 @@
-import {setupOptionFile, getOptionField} from './src/OptFHandler';
-
-//setups config stuff
-setupOptionFile('./src/settings.optf');
-var prefix = getOptionField(0);
-var presenceName = getOptionField(1);
+import { Config, ConfigHelper } from './src/ConfigHandler';
+var configHelper = new ConfigHelper();
+new Config('./data/GlobalConfig.json');
 
 import Discord from 'discord.js';
 const intents = new Discord.Intents(32767);
 export var client:Discord.Client = new Discord.Client({intents})!;
-import {token} from './src/Token.json';
+import {token} from './data/Token.json';
 import * as readline from 'readline';
 export var rl = readline.createInterface({
     input: process.stdin,
@@ -19,13 +16,14 @@ import {Logger} from './src/NewLogger';
 import {InitFunctions} from './src/terminal/ConfHandler';
 import {InitConsoleCommands} from './src/terminal/TermHandler';
 import {eventHandler} from './src/EventHandler';
+var prefix = configHelper.getValue("prefix");
 
 client.on('ready', async () => {
     await InitFunctions().then(() => {
         Logger(`Logged in as ${client.user!.tag}`, "INFO");
         client.user!.setPresence({
             activities:[{
-                name: presenceName,
+                name: configHelper.getValue("presenceName"),
                 type: 'PLAYING'
             }], status: "dnd"
         })
@@ -36,8 +34,8 @@ client.on('ready', async () => {
 new eventHandler(client);
 
 client.on('messageCreate', async(message) => {
-    if(!message.content.startsWith(prefix) || message.author.bot) return;
-    let args = message.content.substring(prefix.length).split(" ");
+    if(!message.content.startsWith("s?") || message.author.bot) return;
+    let args = message.content.substring("s?".length).split(" ");
 
     if(args[0] === "ping")
     {
@@ -59,7 +57,7 @@ client.on('messageCreate', async(message) => {
         });
     }
 
-    if(args[0] === "exit")
+    if(args[0] === "shutdown")
     {
         client.destroy();
         process.exit();

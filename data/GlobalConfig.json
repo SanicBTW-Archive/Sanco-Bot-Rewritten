@@ -1,0 +1,16 @@
+{
+    "categories": ["Bot configuration", "Terminal configuration"],
+    "configuration": 
+    {
+        "Bot configuration": 
+        {
+            "prefix": "s?",
+            "presenceName": "v1.0.0 Rewrite"
+        },
+        "Terminal configuration": 
+        {
+            "clear console on startup": false,
+            "terminal title": "Sanic Bot"
+        }
+    }
+}
