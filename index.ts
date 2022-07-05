@@ -8,7 +8,7 @@ var presenceName = getOptionField(1);
 import Discord from 'discord.js';
 const intents = new Discord.Intents(32767);
 export var client:Discord.Client = new Discord.Client({intents})!;
-import {token} from './src/secrets/Token.json';
+import {token} from './src/Token.json';
 import * as readline from 'readline';
 export var rl = readline.createInterface({
     input: process.stdin,

@@ -1,8 +1,14 @@
-import Discord, { DMChannel, Guild, NewsChannel, PartialDMChannel, TextChannel, ThreadChannel } from 'discord.js';
+import Discord from 'discord.js';
 import { Logger } from './NewLogger';
 import { rl } from '..';
+import path from 'path';
+import fs from 'fs';
 
-export var pushedMessages:any = [];
+var logsDir:string = path.join('.', 'logs');
+var authorDir:string = "";
+var messagesDir:string = "";
+
+export var pushedDetails:any = [];
 
 var details:MessageDetails = 
 {
@@ -18,19 +24,21 @@ export class eventHandler
 {
     constructor(client:Discord.Client)
     {
-        Logger("received client and setting events!", "DEBUG");
-
-        client.on('messageCreate', (msg) => {
+        client.on('messageCreate', async(msg) => {
             if(msg.author.bot) return;
 
-            Logger("Setting up message details table", "DEBUG");
             details.author = msg.author.username;
             details.authorID = msg.author.id;
             details.content = msg.content;
             details.creationDate = msg.createdAt.toUTCString();
             details.guild = msg.guild?.name;
             details.channelID = msg.channelId;
-            console.table(details);
+
+            authorDir = path.join(logsDir, details.authorID) //we use the id to create the folder to avoid emojis or any special characters
+            messagesDir = path.join(authorDir, "messages");
+            fs.mkdirSync(authorDir);
+            fs.mkdirSync(messagesDir);
+
             rl.prompt();
         });
     }
