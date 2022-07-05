@@ -1,5 +1,5 @@
 {
-    "categories": ["Bot configuration", "Terminal configuration", "Filesystem configuration"],
+    "categories": ["Bot configuration", "Terminal configuration", "Filesystem configuration", "Ignore users"],
     "configuration": 
     {
         "Bot configuration": 
@@ -17,6 +17,10 @@
             "save message logs": true,
             "save edited messages": true,
             "save deleted messages": true
+        },
+        "Ignore users":
+        {
+            "sanco": "783050276105093120"
         }
     }
 }

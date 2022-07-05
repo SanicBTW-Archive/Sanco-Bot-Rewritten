@@ -2,6 +2,8 @@ import fs from 'fs';
 
 var Configuration:any = new Object();
 
+export var Ignore:any = new Object();
+
 export class Config
 {
     constructor(path:string)
@@ -13,13 +15,27 @@ export class Config
         for(var i in availableCategories)
         {
             var category = availableCategories[i];
-            var catSettings = fileParse.configuration[category];
-            for(var j in catSettings)
+            if(category === "Ignore users")
             {
-                var setting = j;
-                var settingValue = catSettings[j];
+                var usersToIgnore = fileParse.configuration[category];
+                for(var d in usersToIgnore)
+                {
+                    var userIndex = d;
+                    var userID = usersToIgnore[d];
 
-                Configuration[setting] = settingValue;
+                    Ignore[userIndex] = userID;
+                }
+            }
+            else
+            {
+                var catSettings = fileParse.configuration[category];
+                for(var j in catSettings)
+                {
+                    var setting = j;
+                    var settingValue = catSettings[j];
+    
+                    Configuration[setting] = settingValue;
+                }
             }
         }
     }

@@ -3,7 +3,7 @@ import { rl } from '..';
 import path from 'path';
 import fs from 'fs';
 import { writeFile } from './Helper';
-import { ConfigHelper } from './ConfigHandler';
+import { ConfigHelper, Ignore } from './ConfigHandler';
 
 var configHelper = new ConfigHelper();
 
@@ -42,7 +42,7 @@ export class EventHandler
 
             setupVars(msg);
 
-            if(configHelper.getValue("save message logs"))
+            if(configHelper.getValue("save message logs") && checkUserID(msg.author.id))
             {
                 setupFolder(Folders.messages, details.authorID);
 
@@ -86,7 +86,7 @@ export class EventHandler
 
             setupVars(newMsg);
 
-            if(configHelper.getValue("save edited messages"))
+            if(configHelper.getValue("save edited messages") && checkUserID(newMsg.author!.id))
             {
                 setupFolder(Folders.edited_messages, details.authorID);
 
@@ -126,7 +126,7 @@ export class EventHandler
 
             setupVars(msg);
 
-            if(configHelper.getValue("save deleted messages"))
+            if(configHelper.getValue("save deleted messages") && checkUserID(msg.author!.id))
             {
                 setupFolder(Folders.deleted_messages, details.authorID);
 
@@ -176,6 +176,20 @@ function setupVars(msg:any)
     configHelper.setNewValue("saveDateVar", msg.createdAt.getDate() + "-" + msg.createdAt.getMonth() + "-" + msg.createdAt.getFullYear());
     configHelper.setNewValue("saveTimeVar", msg.createdAt.getHours() + ":" + msg.createdAt.getMinutes() + ":" + msg.createdAt.getSeconds() + "." + msg.createdAt.getMilliseconds());
     configHelper.setNewValue("saveFileName", configHelper.getValue("saveDateVar") + "_" + configHelper.getValue("saveTimeVar") + fileExt);
+}
+
+//checks if the user id given should be ignored
+function checkUserID(userIDtoCheck:string):boolean
+{
+    for(var i in Ignore)
+    {
+        var userIDToIgnore = Ignore[i];
+        if(userIDtoCheck == userIDToIgnore)
+        {
+            return false; //the id given has to be ignored
+        }
+    }
+    return true; //all good, the id given doesnt have to be ignored
 }
 
 type MessageDetails = 
