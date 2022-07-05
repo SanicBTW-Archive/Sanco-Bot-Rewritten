@@ -14,10 +14,11 @@ var configHelper = new ConfigHelper();
 
 var details:MessageDetails = 
 {
-    "detailsVersion": 1.1,
+    "detailsVersion": 1.2,
     "author": "author name",
     "authorID": "author id",
     "content": "message content",
+    "guild": "guild",
     "channelID": "channel id"
 }
 
@@ -32,6 +33,7 @@ export class eventHandler
             details.author = msg.author.username;
             details.authorID = msg.author.id;
             details.content = msg.content;
+            details.guild = msg.guild?.name;
             details.channelID = msg.channelId;
 
             if(configHelper.getValue("save message logs"))
@@ -67,5 +69,6 @@ type MessageDetails =
     author:string,
     authorID:string,
     content:string | never,
+    guild:string | undefined,
     channelID:string
 }
