@@ -2,15 +2,15 @@ import Discord from 'discord.js';
 import { rl } from '..';
 import path from 'path';
 import fs from 'fs';
-import { createDirectory, writeFile } from './Helper';
+import { writeFile } from './Helper';
+import { ConfigHelper } from './ConfigHandler';
 
 var logsDir:string = path.join('.', 'logs');
 var authorDir:string = "";
 var messagesDir:string = "";
 var fileExt:string = ".json";
 var doneSettingUp:boolean = false;
-
-export var pushedDetails:any = [];
+var configHelper = new ConfigHelper();
 
 var details:MessageDetails = 
 {
@@ -34,14 +34,17 @@ export class eventHandler
             details.content = msg.content;
             details.channelID = msg.channelId;
 
-            setupFolders()
-
-            var stringifiedMessage = JSON.stringify(details, null, 4); 
-            var fixedDir = path.join(messagesDir, msg.createdAt.toUTCString() + fileExt);
-
-            if(doneSettingUp)
+            if(configHelper.getValue("save message logs"))
             {
-                writeFile(fixedDir, stringifiedMessage);
+                setupFolders();
+
+                var stringifiedMessage = JSON.stringify(details, null, 4); 
+                var fixedDir = path.join(messagesDir, msg.createdAt.toUTCString() + fileExt);
+    
+                if(doneSettingUp)
+                {
+                    writeFile(fixedDir, stringifiedMessage);
+                }
             }
 
             rl.prompt();

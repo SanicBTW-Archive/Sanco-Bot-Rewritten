@@ -1,5 +1,5 @@
 {
-    "categories": ["Bot configuration", "Terminal configuration"],
+    "categories": ["Bot configuration", "Terminal configuration", "Filesystem configuration"],
     "configuration": 
     {
         "Bot configuration": 
@@ -11,6 +11,10 @@
         {
             "clear console on startup": false,
             "terminal title": "Sanic Bot"
+        },
+        "Filesystem configuration":
+        {
+            "save message logs": false
         }
     }
 }
