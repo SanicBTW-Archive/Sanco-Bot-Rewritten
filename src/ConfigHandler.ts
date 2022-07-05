@@ -32,7 +32,7 @@ export class ConfigHelper
         return Configuration[index];
     }
 
-    setNewValue(index:any, value:string)
+    setNewValue(index:any, value:any)
     {
         Configuration[index] = value;
     }

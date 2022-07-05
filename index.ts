@@ -14,7 +14,7 @@ export var rl = readline.createInterface({
 });
 import {InitFunctions} from './src/terminal/FuncLoader';
 import {InitConsoleCommands} from './src/terminal/TermHandler';
-import {eventHandler} from './src/EventHandler';
+import {EventHandler} from './src/EventHandler';
 var prefix = configHelper.getValue("prefix");
 
 client.on('ready', async () => {
@@ -30,7 +30,7 @@ client.on('ready', async () => {
     });
 });
 
-new eventHandler(client);
+new EventHandler(client);
 
 client.on('messageCreate', async(message) => {
     if(!message.content.startsWith(prefix) || message.author.bot) return;
