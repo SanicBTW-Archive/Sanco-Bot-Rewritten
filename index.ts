@@ -34,8 +34,8 @@ client.on('ready', async () => {
 new eventHandler(client);
 
 client.on('messageCreate', async(message) => {
-    if(!message.content.startsWith("s?") || message.author.bot) return;
-    let args = message.content.substring("s?".length).split(" ");
+    if(!message.content.startsWith(prefix) || message.author.bot) return;
+    let args = message.content.substring(prefix.length).split(" ");
 
     if(args[0] === "ping")
     {
