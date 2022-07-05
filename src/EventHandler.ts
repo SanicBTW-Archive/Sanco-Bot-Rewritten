@@ -14,37 +14,6 @@ var editedMessagesDir:string = "";
 var deletedMessagesDir:string = "";
 var fileExt:string = ".json";
 
-var messageDetails:MessageDetails = 
-{
-    "version": 1.2,
-    "author": "author name",
-    "authorID": "author id",
-    "content": "message content",
-    "guild": "guild",
-    "channelID": "channel id"
-}
-
-var editedMessageDetails:EditedMessageDetails = 
-{
-    "version": 1,
-    "author": "author name",
-    "authorID": "author id",
-    "oldContent": "old message content",
-    "newContent": "new message content",
-    "guild": "guild",
-    "channelID": "channel id",
-}
-
-var deletedMessageDetails:DeletedMessageDetails = 
-{
-    "version": 1,
-    "author": "author name",
-    "authorID": "author id",
-    "deletedContent": "deleted message",
-    "guild": "guild",
-    "channelID": "channel id"
-}
-
 export class EventHandler
 {
     constructor(client:Discord.Client)
@@ -53,19 +22,29 @@ export class EventHandler
         {
             if(msg.author?.bot) return;
 
-            messageDetails.author = msg.author.username;
-            messageDetails.authorID = msg.author.id;
-            messageDetails.content = msg.content;
-            messageDetails.guild = msg.guild?.name;
-            messageDetails.channelID = msg.channelId;
+            var details:MessageDetails = 
+            {
+                "version": 1.2,
+                "author": "author name",
+                "authorID": "author id",
+                "content": "message content",
+                "guild": "guild",
+                "channelID": "channel id"
+            }
+
+            details.author = msg.author.username;
+            details.authorID = msg.author.id;
+            details.content = msg.content;
+            details.guild = msg.guild?.name;
+            details.channelID = msg.channelId;
 
             setupVars(msg);
 
             if(configHelper.getValue("save message logs"))
             {
-                setupFolder(Folders.messages);
+                setupFolder(Folders.messages, details.authorID);
 
-                var stringified = JSON.stringify(messageDetails, null, 4); 
+                var stringified = JSON.stringify(details, null, 4); 
                 var fixedDir = path.join(messagesDir, configHelper.getValue("saveFileName"));
     
                 if(configHelper.getValue("messages dir done"))
@@ -82,21 +61,32 @@ export class EventHandler
         {
             if(newMsg.author?.bot) return;
 
+            var details:EditedMessageDetails = 
+            {
+                "version": 1,
+                "author": "author name",
+                "authorID": "author id",
+                "oldContent": "old message content",
+                "newContent": "new message content",
+                "guild": "guild",
+                "channelID": "channel id",
+            }
+
             //the message is edited by the same person sooo it doesnt matter if oldMsg or newMsg is used
-            editedMessageDetails.author = newMsg.author!.username;
-            editedMessageDetails.authorID = newMsg.author!.id;
-            editedMessageDetails.oldContent = oldMsg.content;
-            editedMessageDetails.newContent = newMsg.content;
-            editedMessageDetails.guild = newMsg.guild?.name;
-            editedMessageDetails.channelID = newMsg.channelId;
+            details.author = newMsg.author!.username;
+            details.authorID = newMsg.author!.id;
+            details.oldContent = oldMsg.content;
+            details.newContent = newMsg.content;
+            details.guild = newMsg.guild?.name;
+            details.channelID = newMsg.channelId;
 
             setupVars(newMsg);
 
             if(configHelper.getValue("save edited messages"))
             {
-                setupFolder(Folders.edited_messages);
+                setupFolder(Folders.edited_messages, details.authorID);
 
-                var stringified = JSON.stringify(editedMessageDetails, null, 4);
+                var stringified = JSON.stringify(details, null, 4);
                 var fixedDir = path.join(editedMessagesDir, configHelper.getValue("saveFileName"));
                 
                 if(configHelper.getValue("edited messages dir done"))
@@ -112,19 +102,29 @@ export class EventHandler
         {
             if(msg.author?.bot) return;
 
-            deletedMessageDetails.author = msg.author!.username;
-            deletedMessageDetails.authorID = msg.author!.id;
-            deletedMessageDetails.deletedContent = msg.content;
-            deletedMessageDetails.guild = msg.guild?.name;
-            deletedMessageDetails.channelID = msg.channelId;
+            var details:DeletedMessageDetails = 
+            {
+                "version": 1,
+                "author": "author name",
+                "authorID": "author id",
+                "deletedContent": "deleted message",
+                "guild": "guild",
+                "channelID": "channel id"
+            }
+
+            details.author = msg.author!.username;
+            details.authorID = msg.author!.id;
+            details.deletedContent = msg.content;
+            details.guild = msg.guild?.name;
+            details.channelID = msg.channelId;
 
             setupVars(msg);
 
             if(configHelper.getValue("save deleted messages"))
             {
-                setupFolder(Folders.deleted_messages);
+                setupFolder(Folders.deleted_messages, details.authorID);
 
-                var stringified = JSON.stringify(deletedMessageDetails, null, 4);
+                var stringified = JSON.stringify(details, null, 4);
                 var fixedDir = path.join(deletedMessagesDir, configHelper.getValue("saveFileName"));
 
                 if(configHelper.getValue("deleted messages dir done"))
@@ -137,26 +137,26 @@ export class EventHandler
 }
 
 //we use the id to create the folder to avoid emojis or any special characters
-function setupFolder(type:Folders)
+function setupFolder(type:Folders, authorID:string)
 {
     switch(type)
     {
         case Folders.messages:
-            configHelper.setNewValue("authorDir", path.join(logsDir, messageDetails.authorID));
+            configHelper.setNewValue("authorDir", path.join(logsDir, authorID));
             messagesDir = path.join(configHelper.getValue("authorDir"), "messages");
             if(!fs.existsSync(configHelper.getValue("authorDir"))){ fs.mkdirSync(configHelper.getValue("authorDir")); }
             if(!fs.existsSync(messagesDir)) { fs.mkdirSync(messagesDir); }
             configHelper.setNewValue("messages dir done", true);
             break;
         case Folders.edited_messages:
-            configHelper.setNewValue("authorDir", path.join(logsDir, editedMessageDetails.authorID));
+            configHelper.setNewValue("authorDir", path.join(logsDir, authorID));
             editedMessagesDir = path.join(configHelper.getValue("authorDir"), "edited_messages");
             if(!fs.existsSync(configHelper.getValue("authorDir"))){ fs.mkdirSync(configHelper.getValue("authorDir")); }
             if(!fs.existsSync(editedMessagesDir)){ fs.mkdirSync(editedMessagesDir); }
             configHelper.setNewValue("edited messages dir done", true);
             break;
         case Folders.deleted_messages:
-            configHelper.setNewValue("authorDir", path.join(logsDir, deletedMessageDetails.authorID));
+            configHelper.setNewValue("authorDir", path.join(logsDir, authorID));
             deletedMessagesDir = path.join(configHelper.getValue("authorDir"), "deleted_messages");
             if(!fs.existsSync(configHelper.getValue("authorDir"))){ fs.mkdirSync(configHelper.getValue("authorDir")); }
             if(!fs.existsSync(deletedMessagesDir)){ fs.mkdirSync(deletedMessagesDir); }
