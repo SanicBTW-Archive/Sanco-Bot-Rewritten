@@ -34,9 +34,14 @@ client.on('ready', async () => {
     });
 });
 
-new LoggingHandler(client);
-
 client.on('messageCreate', (message) => {
+    //prepare user folder
+    if(!message.author.bot)
+    {
+        var fixedUserPath = path.join(".", "users", message.author.id);
+        if(!fs.existsSync(fixedUserPath)){ fs.mkdirSync(fixedUserPath); }
+    }
+
     var prefixIndexer = `${message.author.id}prefix`;
     var prefix = configHelper.getValue(prefixIndexer);
 
@@ -108,3 +113,5 @@ client.on('messageCreate', (message) => {
 });
 
 client.login(token);
+
+new LoggingHandler(client);

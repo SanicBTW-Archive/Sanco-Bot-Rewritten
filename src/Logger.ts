@@ -1,5 +1,4 @@
 import Discord from 'discord.js';
-import { rl } from '..';
 import path from 'path';
 import fs from 'fs';
 import { writeFile } from './Helper';
@@ -7,7 +6,6 @@ import { ConfigHelper, Ignore } from './Configuration';
 
 var configHelper = new ConfigHelper();
 
-var logsDir:string = path.join('.', 'logs');
 //migrate to configHelper next commit
 var messagesDir:string = "";
 var editedMessagesDir:string = "";
@@ -20,6 +18,9 @@ export class LoggingHandler
     {
         client.on('messageCreate', (msg) =>
         {
+            configHelper.setNewValue("logsDir", path.join('.', "users", msg.author!.id, "logs"));
+            if(!fs.existsSync(configHelper.getValue("logsDir"))){ fs.mkdirSync(configHelper.getValue("logsDir")); }
+
             if(msg.author?.bot) return;
 
             var details:MessageDetails = 
@@ -44,7 +45,7 @@ export class LoggingHandler
 
             if(configHelper.getValue("save message logs") && checkUserID(msg.author.id))
             {
-                setupFolder(Folders.messages, details.authorID);
+                setupFolder(Folders.messages);
 
                 var stringified = JSON.stringify(details, null, 4); 
                 var fixedDir = path.join(messagesDir, configHelper.getValue("saveFileName"));
@@ -54,13 +55,14 @@ export class LoggingHandler
                     writeFile(fixedDir, stringified);
                 }
             }
-
-            rl.prompt();
         });
 
         //this one might need a little bit of tweaking tbh
         client.on('messageUpdate', (oldMsg, newMsg) => 
         {
+            configHelper.setNewValue("logsDir", path.join('.', "users", newMsg.author!.id, "logs"));
+            if(!fs.existsSync(configHelper.getValue("logsDir"))){ fs.mkdirSync(configHelper.getValue("logsDir")); }
+
             if(newMsg.author?.bot) return;
 
             var details:EditedMessageDetails = 
@@ -88,7 +90,7 @@ export class LoggingHandler
 
             if(configHelper.getValue("save edited messages") && checkUserID(newMsg.author!.id))
             {
-                setupFolder(Folders.edited_messages, details.authorID);
+                setupFolder(Folders.edited_messages);
 
                 var stringified = JSON.stringify(details, null, 4);
                 var fixedDir = path.join(editedMessagesDir, configHelper.getValue("saveFileName"));
@@ -98,12 +100,13 @@ export class LoggingHandler
                     writeFile(fixedDir, stringified);
                 }
             }
-
-            rl.prompt();
         });
 
         client.on('messageDelete', (msg) => 
         {
+            configHelper.setNewValue("logsDir", path.join('.', "users", msg.author!.id, "logs"));
+            if(!fs.existsSync(configHelper.getValue("logsDir"))){ fs.mkdirSync(configHelper.getValue("logsDir")); }
+
             if(msg.author?.bot) return;
 
             var details:DeletedMessageDetails = 
@@ -128,7 +131,7 @@ export class LoggingHandler
 
             if(configHelper.getValue("save deleted messages") && checkUserID(msg.author!.id))
             {
-                setupFolder(Folders.deleted_messages, details.authorID);
+                setupFolder(Folders.deleted_messages);
 
                 var stringified = JSON.stringify(details, null, 4);
                 var fixedDir = path.join(deletedMessagesDir, configHelper.getValue("saveFileName"));
@@ -143,28 +146,22 @@ export class LoggingHandler
 }
 
 //we use the id to create the folder to avoid emojis or any special characters
-function setupFolder(type:Folders, authorID:string)
+function setupFolder(type:Folders)
 {
     switch(type)
     {
         case Folders.messages:
-            configHelper.setNewValue("authorDir", path.join(logsDir, authorID));
-            messagesDir = path.join(configHelper.getValue("authorDir"), "messages");
-            if(!fs.existsSync(configHelper.getValue("authorDir"))){ fs.mkdirSync(configHelper.getValue("authorDir")); }
+            messagesDir = path.join(configHelper.getValue("logsDir"), "messages");
             if(!fs.existsSync(messagesDir)) { fs.mkdirSync(messagesDir); }
             configHelper.setNewValue("messages dir done", true);
             break;
         case Folders.edited_messages:
-            configHelper.setNewValue("authorDir", path.join(logsDir, authorID));
-            editedMessagesDir = path.join(configHelper.getValue("authorDir"), "edited_messages");
-            if(!fs.existsSync(configHelper.getValue("authorDir"))){ fs.mkdirSync(configHelper.getValue("authorDir")); }
+            editedMessagesDir = path.join(configHelper.getValue("logsDir"), "edited_messages");
             if(!fs.existsSync(editedMessagesDir)){ fs.mkdirSync(editedMessagesDir); }
             configHelper.setNewValue("edited messages dir done", true);
             break;
         case Folders.deleted_messages:
-            configHelper.setNewValue("authorDir", path.join(logsDir, authorID));
-            deletedMessagesDir = path.join(configHelper.getValue("authorDir"), "deleted_messages");
-            if(!fs.existsSync(configHelper.getValue("authorDir"))){ fs.mkdirSync(configHelper.getValue("authorDir")); }
+            deletedMessagesDir = path.join(configHelper.getValue("logsDir"), "deleted_messages");
             if(!fs.existsSync(deletedMessagesDir)){ fs.mkdirSync(deletedMessagesDir); }
             configHelper.setNewValue("deleted messages dir done", true);
             break;

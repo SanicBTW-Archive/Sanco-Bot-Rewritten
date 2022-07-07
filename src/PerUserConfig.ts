@@ -12,12 +12,12 @@ class FileSysOperations
     //scans the dir on call or startup on index.ts, for easier implementation of config
     scanPerUserConfigFolder()
     {
-        var userConfigPath = path.join(".", "per_user_config");
+        var userConfigPath = path.join(".", "users");
         
         var usersConfig = scanDir(userConfigPath);
         for(var i in usersConfig)
         {
-            var prefixFile = path.join(userConfigPath, usersConfig[i], "prefix");
+            var prefixFile = path.join(userConfigPath, usersConfig[i], "userConfig", "prefix");
 
             var indexer = `${usersConfig[i]}prefix`;
             if(fs.existsSync(prefixFile)){ configHelper.setNewValue(indexer, fs.readFileSync(prefixFile, 'utf-8')); }
@@ -28,7 +28,7 @@ class FileSysOperations
     //checks the user config path, using the user id
     createConfigFolder(id:string)
     {
-        configHelper.setNewValue("path", path.join(".", "per_user_config", id));
+        configHelper.setNewValue("path", path.join(".", "users", id, "userConfig"));
         if(!fs.existsSync(configHelper.getValue("path"))){ fs.mkdirSync(configHelper.getValue("path")); }
     }
 
