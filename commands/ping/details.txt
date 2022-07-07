@@ -1,0 +1,2 @@
+Returns the ping of the bot
+everyone

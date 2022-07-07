@@ -1,4 +1,4 @@
-import { ConfigHelper } from '../../ConfigHandler';
+import { ConfigHelper } from '../../Configuration';
 
 module.exports = {
     alias: "change-title",

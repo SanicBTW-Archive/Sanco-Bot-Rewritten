@@ -3,7 +3,7 @@ import { rl } from '..';
 import path from 'path';
 import fs from 'fs';
 import { writeFile } from './Helper';
-import { ConfigHelper, Ignore } from './ConfigHandler';
+import { ConfigHelper, Ignore } from './Configuration';
 
 var configHelper = new ConfigHelper();
 
@@ -14,7 +14,7 @@ var editedMessagesDir:string = "";
 var deletedMessagesDir:string = "";
 var fileExt:string = ".json";
 
-export class EventHandler
+export class LoggingHandler
 {
     constructor(client:Discord.Client)
     {

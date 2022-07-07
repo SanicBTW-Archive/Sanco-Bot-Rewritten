@@ -9,7 +9,7 @@ export async function coolTextFile(path:string):Promise<string[]>
 }
 
 //will scan the given dir and return the folders in the order as it is in the filesystem
-export async function scanDir(dir:string):Promise<string[]> 
+export function scanDir(dir:string):string[]
 {
     var returner:Array<string> = [];
     var scan = path.join(dir);

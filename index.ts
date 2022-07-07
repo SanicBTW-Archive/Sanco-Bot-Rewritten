@@ -1,6 +1,9 @@
-import { Config, ConfigHelper } from './src/ConfigHandler';
+import { Config, ConfigHelper } from './src/Configuration';
 var configHelper = new ConfigHelper();
 new Config('./data/GlobalConfig.json');
+
+import { PerUserConfig } from './src/PerUserConfig';
+export var perUserConfig = new PerUserConfig();
 
 import Discord from 'discord.js';
 const intents = new Discord.Intents(32767);
@@ -14,8 +17,8 @@ export var rl = readline.createInterface({
 });
 import {InitFunctions} from './src/terminal/FuncLoader';
 import {InitConsoleCommands} from './src/terminal/TermHandler';
-import {EventHandler} from './src/EventHandler';
-var prefix = configHelper.getValue("prefix");
+import {LoggingHandler} from './src/Logger';
+import { CommandData, CommandHelper, commandNames } from "./src/CommandData";
 
 client.on('ready', async () => {
     await InitFunctions().then(() => {
@@ -30,30 +33,20 @@ client.on('ready', async () => {
     });
 });
 
-new EventHandler(client);
+new LoggingHandler(client);
 
-client.on('messageCreate', async(message) => {
+var commandHelper = new CommandHelper();
+new CommandData('./commands');
+
+/*
+client.on('messageCreate', (message) => {
     if(!message.content.startsWith(prefix) || message.author.bot) return;
     let args = message.content.substring(prefix.length).split(" ");
 
+    perUserConfig.init(message.author.id);
+
     if(args[0] === "ping")
     {
-        const calcping = new Discord.MessageEmbed()
-        .setTitle('Calculando el ping...');
-
-        message.channel.send({embeds:[calcping]}).then(resultMessage => {
-            const msgpingsomething = resultMessage.createdTimestamp - message.createdTimestamp;
-
-            const pingresult = new Discord.MessageEmbed()
-            .setTitle('Pong! :ping_pong:')
-            .addFields
-            (
-                { name: 'Latencia del bot ', value: `${msgpingsomething}ms`, inline: true},
-                { name: 'Ping del bot ', value: `${client.ws.ping}ms`, inline: true},
-            ).setColor('GREEN');
-
-            resultMessage.edit({embeds: [pingresult]});
-        });
     }
 
     //temp command lol
@@ -68,6 +61,6 @@ client.on('messageCreate', async(message) => {
         client.destroy();
         process.exit();
     }
-});
+});*/
 
 client.login(token);
