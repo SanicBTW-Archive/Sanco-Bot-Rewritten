@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import { ConfigHelper} from './Configuration';
-import { writeFile } from './Helper';
+import { scanDir, writeFile } from './Helper';
 
 var configHelper = new ConfigHelper();
 
@@ -11,6 +11,22 @@ configHelper.setNewValue("required files exists", false);
 
 class FileSysOperations
 {
+    //scans the dir on call or startup on index.ts, for easier implementation of config
+    scanPerUserConfigFolder()
+    {
+        var userConfigPath = path.join(".", "per_user_config");
+        
+        var usersConfig = scanDir(userConfigPath);
+        for(var i in usersConfig)
+        {
+            //as we are 100% sure that the file exists we proceed, will implement a failsafe in the next version i guess
+            var prefixFile = path.join(userConfigPath, usersConfig[i], "prefix");
+
+            var indexer = `${usersConfig[i]}prefix`;
+            configHelper.setNewValue(indexer, fs.readFileSync(prefixFile, 'utf-8'));
+        }
+    }
+
     //checks the user config path, using the user id
     checkUserConfigFolder(id:string)
     {
@@ -19,6 +35,7 @@ class FileSysOperations
         else{ configHelper.setNewValue("pathExists", true); }
     }
 
+    //checks if the required files exists, might hard code the path or something
     checkUserConfigFiles(userConfigPath:string)
     {
         var prefixFile = path.join(userConfigPath, "prefix");
@@ -32,17 +49,12 @@ export class PerUserConfig extends FileSysOperations
     constructor()
     {
         super();
+        this.scanPerUserConfigFolder();
     }
 
-    init(id:string)
+    checkUserIDConfig(id:string)
     {
-        if(!configHelper.getValue("pathExists"))
-        {
-            this.checkUserConfigFolder(id);
-        }
-        if(!configHelper.getValue("required files exists"))
-        {
-            this.checkUserConfigFiles(configHelper.getValue("path"));
-        }
+        if(!configHelper.getValue("pathExists")){ this.checkUserConfigFolder(id); }
+        if(!configHelper.getValue("required files exists")) { this.checkUserConfigFiles(configHelper.getValue("path")); }
     }
 }

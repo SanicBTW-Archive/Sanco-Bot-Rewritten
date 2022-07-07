@@ -20,7 +20,6 @@ import {InitConsoleCommands} from './src/terminal/TermHandler';
 import {LoggingHandler} from './src/Logger';
 import path from 'path';
 import fs from 'fs';
-var prefix = configHelper.getValue("prefix");
 
 client.on('ready', async () => {
     await InitFunctions().then(() => {
@@ -38,12 +37,14 @@ client.on('ready', async () => {
 new LoggingHandler(client);
 
 client.on('messageCreate', (message) => {
-    if(!message.content.startsWith(prefix) || message.author.bot) return;
-    let args = message.content.substring(prefix.length).split(" ");
+    var prefixIndexer = `${message.author.id}prefix`;
+    if(!message.content.startsWith(configHelper.getValue(prefixIndexer)) || message.author.bot) return;
+    let args = message.content.substring(configHelper.getValue(prefixIndexer).length).split(" ");
 
     //runs every time a command is executed
-    perUserConfig.init(message.author.id);
-    if(configHelper.getValue("required files exists")){ prefix = configHelper.getValue("userPrefix"); }
+    perUserConfig.checkUserIDConfig(message.author.id);
+    /*perUserConfig.init(message.author.id);
+    if(configHelper.getValue("required files exists")){ prefix = configHelper.getValue("userPrefix"); }*/
 
     if(args[0] === "ping")
     {
