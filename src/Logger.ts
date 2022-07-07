@@ -18,10 +18,10 @@ export class LoggingHandler
     {
         client.on('messageCreate', (msg) =>
         {
+            if(msg.author?.bot) return;
+
             configHelper.setNewValue("logsDir", path.join('.', "users", msg.author!.id, "logs"));
             if(!fs.existsSync(configHelper.getValue("logsDir"))){ fs.mkdirSync(configHelper.getValue("logsDir")); }
-
-            if(msg.author?.bot) return;
 
             var details:MessageDetails = 
             {
@@ -60,10 +60,10 @@ export class LoggingHandler
         //this one might need a little bit of tweaking tbh
         client.on('messageUpdate', (oldMsg, newMsg) => 
         {
+            if(newMsg.author?.bot) return;
+
             configHelper.setNewValue("logsDir", path.join('.', "users", newMsg.author!.id, "logs"));
             if(!fs.existsSync(configHelper.getValue("logsDir"))){ fs.mkdirSync(configHelper.getValue("logsDir")); }
-
-            if(newMsg.author?.bot) return;
 
             var details:EditedMessageDetails = 
             {
@@ -104,10 +104,10 @@ export class LoggingHandler
 
         client.on('messageDelete', (msg) => 
         {
+            if(msg.author?.bot) return;
+
             configHelper.setNewValue("logsDir", path.join('.', "users", msg.author!.id, "logs"));
             if(!fs.existsSync(configHelper.getValue("logsDir"))){ fs.mkdirSync(configHelper.getValue("logsDir")); }
-
-            if(msg.author?.bot) return;
 
             var details:DeletedMessageDetails = 
             {

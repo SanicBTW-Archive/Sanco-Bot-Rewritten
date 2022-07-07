@@ -62,3 +62,15 @@ export class PerUserConfig extends FileSysOperations
         this.createConfigEssentials(id);
     }
 }
+
+//modules
+export function changePrefix(id:string, newPrefix:string)
+{
+    //these are from above, sorry lol
+    configHelper.setNewValue("path", path.join(".", "users", id, "userConfig"));
+    var mainPath = configHelper.getValue("path");
+    var prefixFile = path.join(mainPath, "prefix");
+
+    configHelper.setNewValue(`${id}prefix`, newPrefix);
+    writeFile(prefixFile, configHelper.getValue(`${id}prefix`));
+}

@@ -2,7 +2,7 @@ import { Config, ConfigHelper } from './src/Configuration';
 var configHelper = new ConfigHelper();
 new Config('./data/GlobalConfig.json');
 
-import { PerUserConfig } from './src/PerUserConfig';
+import { changePrefix, PerUserConfig } from './src/PerUserConfig';
 var perUserConfig = new PerUserConfig();
 
 import Discord from 'discord.js';
@@ -103,6 +103,43 @@ client.on('messageCreate', (message) => {
         .setTitle(`${message.author!.tag} profile picture`)
         .setImage(message.author!.avatarURL({size: 4096, format: 'png'})!.toString());
         message.channel.send({embeds: [pfpEmbed]});
+    }
+
+    if(args[0] === "settings")
+    {
+        var userSettingsEmbed = new Discord.MessageEmbed()
+        .setTitle('Your settings')
+        .setColor('BLURPLE');
+
+        userSettingsEmbed.addField('Your prefix is: ', `${prefix}`);
+
+        message.reply({embeds: [userSettingsEmbed]});
+    }
+
+    if(args[0] === "change")
+    {
+        if(args[1] == null || args[1] == "") message.reply("Specify a setting to change bruh");
+        
+        switch(args[1])
+        {
+            case "prefix":
+
+                var newPrefix = new Discord.MessageEmbed().setColor('GREEN');
+
+                if(args[2] == null || args[2] == "")
+                { 
+                    changePrefix(message.author.id, configHelper.getValue("defaultPrefix"));
+                    newPrefix.setTitle("Your prefix is now the default prefix (s?)");
+                    message.reply({embeds: [newPrefix]});
+                }
+                else 
+                {
+                    changePrefix(message.author.id, args[2]);
+                    newPrefix.setTitle("Your prefix is now: " + prefix)
+                    message.reply({embeds: [newPrefix]});
+                }
+            break;
+        }
     }
 
     if(args[0] === "shutdown")
