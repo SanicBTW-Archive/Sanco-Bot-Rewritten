@@ -43,6 +43,7 @@ client.on('messageCreate', (message) => {
 
     //runs every time a command is executed
     perUserConfig.init(message.author.id);
+    if(configHelper.getValue("required files exists")){ prefix = configHelper.getValue("userPrefix"); }
 
     if(args[0] === "ping")
     {
@@ -85,11 +86,12 @@ client.on('messageCreate', (message) => {
         message.channel.send({embeds: [helpMenu]});
     }
 
-    //temp command lol
     if(args[0] === "pfp")
     {
-        var pfp = message.author.avatarURL({size: 4096, format: 'png'});
-        message.channel.send(pfp!);
+        var pfpEmbed = new Discord.MessageEmbed()
+        .setTitle(`${message.author!.tag} profile picture`)
+        .setImage(message.author!.avatarURL({size: 4096, format: 'png'})!.toString());
+        message.channel.send({embeds: [pfpEmbed]});
     }
 
     if(args[0] === "shutdown")
