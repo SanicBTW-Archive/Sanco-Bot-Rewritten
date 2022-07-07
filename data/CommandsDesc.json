@@ -1,0 +1,9 @@
+{
+    "commands": ["ping", "pfp", "shutdown"],
+    "paths":
+    {
+        "ping": "ping_details.txt",
+        "pfp": "pfp_details.txt",
+        "shutdown": "shutdown_details.txt"
+    }
+}

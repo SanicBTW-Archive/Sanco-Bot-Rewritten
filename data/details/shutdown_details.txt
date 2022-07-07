@@ -1,0 +1,2 @@
+Shuts down the bot
+admins
