@@ -66,7 +66,6 @@ client.on('messageCreate', (message) => {
 
     if(args[0] === "help")
     {
-        //i might change the name of the files cuz they sound hella weird and im not okay wiht them S:bo
         var theCommandsDescFile = fs.readFileSync('./data/CommandsDesc.json', "utf-8");
         var fileParse = JSON.parse(theCommandsDescFile);
         var helpMenu = new Discord.MessageEmbed()
@@ -78,7 +77,7 @@ client.on('messageCreate', (message) => {
         {
             var command = availableCommands[i];
             var paths = fileParse.paths[command];
-            var fixedPath = path.join(".", "data", "details", paths);
+            var fixedPath = path.join(".", "data", "descriptions", paths);
             var contents:any = fs.readFileSync(fixedPath, 'utf-8').trim().split('\n');
 
             helpMenu.addField(command, `${contents[0]}\nCan be used by: ${contents[1]}`, false);
