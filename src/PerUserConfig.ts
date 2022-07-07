@@ -6,8 +6,6 @@ import { scanDir, writeFile } from './Helper';
 var configHelper = new ConfigHelper();
 
 configHelper.setNewValue("path", null);
-configHelper.setNewValue("pathExists", false);
-configHelper.setNewValue("required files exists", false);
 
 class FileSysOperations
 {
@@ -19,28 +17,34 @@ class FileSysOperations
         var usersConfig = scanDir(userConfigPath);
         for(var i in usersConfig)
         {
-            //as we are 100% sure that the file exists we proceed, will implement a failsafe in the next version i guess
             var prefixFile = path.join(userConfigPath, usersConfig[i], "prefix");
 
             var indexer = `${usersConfig[i]}prefix`;
-            configHelper.setNewValue(indexer, fs.readFileSync(prefixFile, 'utf-8'));
+            if(fs.existsSync(prefixFile)){ configHelper.setNewValue(indexer, fs.readFileSync(prefixFile, 'utf-8')); }
+            else{ writeFile(prefixFile, configHelper.getValue("defaultPrefix")); }
         }
     }
 
     //checks the user config path, using the user id
-    checkUserConfigFolder(id:string)
+    createConfigFolder(id:string)
     {
         configHelper.setNewValue("path", path.join(".", "per_user_config", id));
-        if(!fs.existsSync(configHelper.getValue("path"))){ fs.mkdirSync(configHelper.getValue("path")); configHelper.setNewValue("pathExists", true); }
-        else{ configHelper.setNewValue("pathExists", true); }
+        if(!fs.existsSync(configHelper.getValue("path"))){ fs.mkdirSync(configHelper.getValue("path")); }
     }
 
-    //checks if the required files exists, might hard code the path or something
-    checkUserConfigFiles(userConfigPath:string)
+    //checks if the required files exists
+    createConfigEssentials(id:string)
     {
-        var prefixFile = path.join(userConfigPath, "prefix");
-        if(!fs.existsSync(prefixFile)){ writeFile(prefixFile, configHelper.getValue("prefix")); configHelper.setNewValue("required files exists", true); }
-        if(fs.existsSync(prefixFile)){ configHelper.setNewValue("userPrefix", fs.readFileSync(prefixFile, 'utf-8')); configHelper.setNewValue("required files exists", true); }
+        var mainPath = configHelper.getValue("path");
+        var prefixFile = path.join(mainPath, "prefix");
+        
+        var prefixIndexer = `${id}prefix`;
+
+        if(!fs.existsSync(prefixFile))
+        { 
+            writeFile(prefixFile, configHelper.getValue("defaultPrefix"));
+            configHelper.setNewValue(prefixIndexer, fs.readFileSync(prefixFile, 'utf-8'));
+        }
     }
 }
 
@@ -52,9 +56,9 @@ export class PerUserConfig extends FileSysOperations
         this.scanPerUserConfigFolder();
     }
 
-    checkUserIDConfig(id:string)
+    createConfig(id:string)
     {
-        if(!configHelper.getValue("pathExists")){ this.checkUserConfigFolder(id); }
-        if(!configHelper.getValue("required files exists")) { this.checkUserConfigFiles(configHelper.getValue("path")); }
+        this.createConfigFolder(id);
+        this.createConfigEssentials(id);
     }
 }

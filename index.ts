@@ -38,13 +38,18 @@ new LoggingHandler(client);
 
 client.on('messageCreate', (message) => {
     var prefixIndexer = `${message.author.id}prefix`;
-    if(!message.content.startsWith(configHelper.getValue(prefixIndexer)) || message.author.bot) return;
-    let args = message.content.substring(configHelper.getValue(prefixIndexer).length).split(" ");
+    var prefix = configHelper.getValue(prefixIndexer);
 
-    //runs every time a command is executed
-    perUserConfig.checkUserIDConfig(message.author.id);
-    /*perUserConfig.init(message.author.id);
-    if(configHelper.getValue("required files exists")){ prefix = configHelper.getValue("userPrefix"); }*/
+    if(prefix == null && !message.author.bot)
+    {
+        //we set the default prefix as the prefix in order to execute the command without any problem
+        prefix = configHelper.getValue("defaultPrefix");
+        //we create the config for that user and the command is executed without any problem as we set the user prefix temporarily as the default prefix
+        perUserConfig.createConfig(message.author.id);
+    }
+    
+    if(!message.content.startsWith(prefix) || message.author.bot) return;
+    let args = message.content.substring(prefix.length).split(" ");
 
     if(args[0] === "ping")
     {

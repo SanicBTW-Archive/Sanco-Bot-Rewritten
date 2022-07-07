@@ -70,7 +70,7 @@ export async function scanDirTWOT(dir:string)
     return returner;
 }
 
-export async function writeFile(path:string, content:string) {
+export function writeFile(path:string, content:string) {
     try
     {
         fs.writeFileSync(path, content);

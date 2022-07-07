@@ -4,7 +4,7 @@
     {
         "Bot configuration": 
         {
-            "prefix": "s?",
+            "defaultPrefix": "s?",
             "presenceName": "v1.0.0 Rewrite"
         },
         "Terminal configuration": 
